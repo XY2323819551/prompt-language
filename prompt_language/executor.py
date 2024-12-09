@@ -23,7 +23,6 @@ class Executor:
         
         while not block_queue.empty():
             block = await block_queue.get()
-
             if block.block_type == "loop":
                 pass
             elif block.block_type == "judgment":
