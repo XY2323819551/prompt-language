@@ -1,0 +1,46 @@
+
+
+我准备写一个解析器，分为两大块，第一块是全局解析器，第二块是局部解析器。
+
+现在你需要先写一个全局解析器，拆解每一个block，最终的结果存储到队列中，返回这个队列。（输入是整个文件中的字符串，比如testcase1.pl和testcase2.pl中的内容）
+
+全局解析器的每一块包含两个字段，block_type和statement（即解析出来的内容）
+
+block_type包括：
+- loop
+- judgment
+- llm
+- code
+- condition_judge
+- exit
+- function
+- agent
+
+请你将写好的代码apply到global_parser.py中，并附加测试案例
+tips: 
+- llm
+- code
+- condition_judge
+- exit
+- function
+这几个block除了语法规范中提到的规范之外，这些语句都以赋值和赋值变量以及换行符结束，这些block都可能跨多行
+这5个block中除了llm、code、condition_judge、和exit有明确的关键字标识，function是具体的函数名称（此外，loop block的开头和结束是具有统一缩进的FOR-END，judgment也是，agent block 也有具体的关键字，只有function没有）
+
+
+
+注意，不要影响到其他block的解析逻辑
+请你先反思自己为什么会犯上述错误，然后澄清你的新思路，再按照你的新思路修改global_parser.py的代码
+请你仔细思考后，并且自己测试通过之后，再把代码交给我。
+你写完的代码需要交给yann lecun审核，请你认真对待。
+
+
+1、说出每个语法块的规则，每个块有可能跨越多行，但是只要你找准开头和结束，就可以将其解析出来
+2、反思你上述产生错误的原因
+3、看看这个错误在解析其他block的时候有没有犯
+4、给出新的解决方案，确保逻辑清晰
+5、将新生成的代码apply到global_parser.py中
+
+
+好的，现在给你一个字符串，请你添加解析loop_block和judgment_block的逻辑，前提是确保请已有的逻辑不会被修改和覆盖！所以在你修改代码前请先复习global_parser.py中的已有内容。
+
+

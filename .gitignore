@@ -9,6 +9,7 @@ __pycache__/
 *$py.class
 .Python
 *.so
+.cursorrules
 
 # 临时文件
 tmp/

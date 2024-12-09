@@ -1,15 +1,4 @@
 
-
-
-
-
-
-
-
-[toc]
-
-
-
 # promtp language rules V 0.1.0
 
 
