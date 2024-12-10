@@ -9,7 +9,7 @@ class LoopBlock:
     variable: str  # 循环变量名
     target: str   # 循环目标对象的原始字符串表示
     iteration_target: Any  # 实际的迭代对象
-    body: str  # 循环体语句（原始字符串）
+    statement: str  # 循环体语句（原始字符串）
 
 
 @dataclass
@@ -22,8 +22,9 @@ class JudgmentBlock:
 @dataclass
 class Statement:
     """语句的数据类"""
-    variables: List[str]  # 语句中的变量列表
-    content: str  # 语句内容
+    assign_method: Optional[str]  # 赋值方法 (->, >> 或 None)
+    res_name: Optional[str]      # 结果变量名
+    statement: Optional[str]     # 语句内容
 
 
 class LoopParser:
@@ -96,7 +97,7 @@ class LoopParser:
                 
             # 合并多行并清理格式
             full_target = ' '.join(target_parts)
-            # 清理多余的空格和换行
+            # 清理多行的空格和换行
             full_target = re.sub(r'\s+', ' ', full_target)
             return full_target, current_idx
             
@@ -130,7 +131,7 @@ class LoopParser:
         # 解析FOR行
         for_line = lines[0].strip()
         if not for_line.startswith('FOR '):
-            raise ValueError("不有效的FOR循环语句")
+            raise ValueError("不是有效的FOR循环语句")
         
         # 获取循环变量名
         in_pos = for_line.find(' in ')
@@ -145,8 +146,8 @@ class LoopParser:
         target, end_idx = self._extract_target(lines, 0)
         
         # 提取循环体并处理缩进
-        body = '\n'.join(lines[end_idx + 1:-1])  # 跳过目标行和END行
-        normalized_body = self._normalize_indent(body)
+        statement = '\n'.join(lines[end_idx + 1:-1])  # 跳过目标行和END行
+        normalized_statement = self._normalize_indent(statement)
         
         # 获取实际的迭代目标
         iteration_target = None
@@ -157,7 +158,7 @@ class LoopParser:
             variable=variable,
             target=target,
             iteration_target=iteration_target,
-            body=normalized_body
+            statement=normalized_statement
         )
     
     def _is_list_literal(self, target: str) -> bool:
@@ -455,29 +456,103 @@ class StatementParser:
     
     def __init__(self):
         """初始化解析器"""
-        pass
+        self.variable_pattern = re.compile(r'\$[a-zA-Z_][a-zA-Z0-9_]*')
+        self.complex_variable_pattern = re.compile(r'\${([^}]+)}')
     
-    async def parse(self, content: str) -> Statement:
+    async def parse(self, content: str, variable_pool: Any = None) -> Statement:
         """
         解析单条语句
         
         Args:
             content: 语句字符串
+            variable_pool: 变量池实例，用于解析变量引用
             
         Returns:
             Statement: 解析后的语句数据
         """
-        pass
+        # 处理空内容
+        if not content.strip():
+            return Statement(None, None, None)
+        
+        # 查找赋值符号
+        assign_method = None
+        res_name = None
+        statement = content.strip()
+        
+        if '->' in content:
+            assign_method = '->'
+            parts = content.split('->')
+            statement = parts[0].strip()
+            res_name = parts[1].strip()
+        elif '>>' in content:
+            assign_method = '>>'
+            parts = content.split('>>')
+            statement = parts[0].strip()
+            res_name = parts[1].strip()
+        
+        # 如果有变量池，处理变量引用
+        if variable_pool:
+            statement = await self._replace_variables(statement, variable_pool)
+        
+        return Statement(
+            assign_method=assign_method,
+            res_name=res_name,
+            statement=statement
+        )
     
-    async def _extract_variables(self, content: str) -> List[str]:
+    async def _replace_variables(self, content: str, variable_pool: Any) -> str:
         """
-        提取语句中的变量
+        替换内容中的变量引用
         
         Args:
-            content: 语句字符串
+            content: 包含变量引用的字符串
+            variable_pool: 变量池实例
             
         Returns:
-            List[str]: 变量名列表
+            处理后的字符串
         """
-        pass
+        result = content
+        
+        # 处理复杂变量引用 ${var.field}
+        while '${' in result:
+            match = self.complex_variable_pattern.search(result)
+            if not match:
+                break
+                
+            var_expr = match.group(1)
+            var_value = None
+            
+            # 处理嵌套属性
+            if '.' in var_expr:
+                parts = var_expr.split('.')
+                var_obj = await variable_pool.get_variable(parts[0].strip('$'))
+                if var_obj:
+                    for part in parts[1:]:
+                        var_obj = var_obj[part]
+                    var_value = var_obj
+            else:
+                var_value = await variable_pool.get_variable(var_expr.strip('$'))
+                
+            if var_value is not None:
+                result = result.replace(f"${{{var_expr}}}", str(var_value))
+            else:
+                # 如果变量不存在，保持原样
+                break
+        
+        # 处理简单变量引用 $var
+        while '$' in result:
+            match = self.variable_pattern.search(result)
+            if not match:
+                break
+                
+            var_name = match.group(0)[1:]  # 移除$前缀
+            var_value = await variable_pool.get_variable(var_name)
+            
+            if var_value is not None:
+                result = result.replace(f"${var_name}", str(var_value))
+            else:
+                # 如果变量不存在，保持原样
+                break
+        
+        return result
 

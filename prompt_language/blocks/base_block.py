@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
-from ..config import GlobalVariablePool
+from prompt_language.parser.local_parser import StatementParser
 
 class BaseBlock(ABC):
     def __init__(self):
-        self.variable_pool = GlobalVariablePool()
+        """初始化基类，创建 StatementParser 实例"""
+        self.statement_parser = StatementParser()
     
     @abstractmethod
     async def execute(self, statement: str) -> None:

@@ -24,13 +24,12 @@ class MockVariablePool(GlobalVariablePool):
 
 async def test_loop_parser():
     """测试循环语句解析器"""
-    # 创建解析器和mock变量池
     parser = LoopParser()
     mock_pool = MockVariablePool()
     
     # 读取测试文件
     test_dir = os.path.dirname(os.path.abspath(__file__))
-    test_files = [f'loop_block{i}.pl' for i in range(1, 6)]  # loop_block1.pl 到 loop_block4.pl
+    test_files = [f'loop_block{i}.pl' for i in range(1, 6)]
     
     for test_file in test_files:
         file_path = os.path.join(test_dir, test_file)
@@ -55,8 +54,8 @@ async def test_loop_parser():
             print(f"循环变量: {loop_block.variable}")
             print(f"目标表达式: {loop_block.target}")
             print(f"实际迭代值: {iteration_target}")
-            print("\n循环体:")
-            print(loop_block.body)
+            print("\n循环体语句:")
+            print(loop_block.statement)
             
         except FileNotFoundError:
             print(f"\n✗ 文件不存在: {test_file}")
