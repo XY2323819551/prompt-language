@@ -17,5 +17,5 @@ class BlockRouter:
             "llm": LLMBlock()
         }
     
-    def get_block(self, block_type: str) -> Optional[BaseBlock]:
-        return self.blocks.get(block_type) 
+    async def execute_block(self, block_type: str, statements: str):
+        await self.blocks.get(block_type).execute(statements) 

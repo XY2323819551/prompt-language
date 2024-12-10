@@ -1,0 +1,213 @@
+
+我接下来要进入下一步的解析工作了。
+请你在local_parser.py中构建3个类
+添加解析loop_block和judgment_block的类，再预留一个解析子句的类，可以分别命名为LoopParser, JudgmentParser, StatementParser
+
+
+LoopParser的目标：解析最外层的for循环块，提取出循环变量名，循环对象，以及循环体
+JudgmentParser的目标：解析if语句，提取出条件，以及条件成立时的语句块
+StatementParser的目标：解析for循环中的statement，提取出statement中的临时变量名，以及statement
+我将按照你的要求在`local_parser.py`中添加`LoopParser`、`JudgmentParser`和`StatementParser`类。
+
+
+
+# LoopParser的example
+# LoopParser的目标：解析最外层的for循环块，提取出循环变量名，循环对象，以及循环体
+## 示例1: for循环从列表元素中取值
+你需要返回语句中的临时变量名`$city`, 一个可迭代的对象iteration（可使用for循环遍历），以及下一层的statement
+```
+FOR $city in [
+    "shanghai",
+    "beijing",
+    "shenzhen",
+    "guangzhou",
+    "hangzhou"
+]:
+    @get_weather($city) -> city_weather
+    根据${city_weather.status}写一首诗 -> weather_poem
+    $weather_poem >> poems_collection
+END
+```
+
+在该例子中，你需要返回的具体包括：
+```
+{
+    "temp_var": "$city",
+    "iteration": ["shanghai","beijing","shenzhen","guangzhou","hangzhou"],
+    "statement": "
+    @get_weather($city) -> city_weather
+    根据${city_weather.status}写一首诗 -> weather_poem
+    $weather_poem >> poems_collection
+    "
+}
+```
+
+
+
+
+## 示例2: for循环从全局变量池的变量中取值，当前示例的test_data是字典类型
+你需要返回语句中的临时变量名`$question`, 一个可迭代的对象iteration，以及下一层的statement
+在本例中，可迭代对象是${test_data.questions}，你需要从全局变量池中获取到这个变量。具体步骤为先获取到test_data，然后获取到test_data的questions字段的具体的值
+```
+FOR $question in ${test_data.questions}:
+    @serpapi_search($question) -> search_result
+    总结一下$search_result -> summary
+    $summary >> qa_collection
+END
+```
+
+在该例子中，你需要返回的具体包括：
+```
+{
+    "temp_var": "$question",
+    "iteration": ${test_data.questions}从全局变量池中获取到的值,
+    "statement": "
+    @serpapi_search($question) -> search_result
+    总结一下$search_result -> summary
+    $summary >> qa_collection
+    "
+}
+```
+
+## 示例3: for循环从全局变量池的变量中取值，当前示例的testdata2是列表类型，[0]表示索引，你需要根据实际填写的索引进行取值
+在本例中，可迭代对象是testdata2[0]，你需要从全局变量池中获取到这个变量。具体步骤为先获取到变量名为testdata2的变量，然后获取到testdata2索引为0的具体的值
+```
+FOR $question in ${testdata2[0]}:
+    @serpapi_search($question) -> search_result
+END
+```
+在该例子中，你需要返回的具体包括：
+```
+{
+    "temp_var": "$question",
+    "iteration": ${testdata2[0]}从全局变量池中获取到的值,
+    "statement": "
+    @serpapi_search($question) -> search_result
+    "
+}
+```
+## 示例4: for循环从全局变量池的变量中取值，当前示例的testdata2直接就是列表类型了
+在本例中，可迭代对象是testdata2，你需要从全局变量池中获取到这个变量。具体步骤为先获取到变量名为testdata2的变量即可，
+```
+FOR $question in $testdata2:
+    总结一下$search_result -> summary
+    $summary >> qa_collection
+END
+```
+在该例子中，你需要返回的具体包括：
+```
+{
+    "temp_var": "$question",
+    "iteration": $testdata2从全局变量池中获取到的值,
+    "statement": "
+    总结一下$search_result -> summary
+    $summary >> qa_collection
+    "
+}
+```
+
+
+
+# JudgmentParser的example
+# JudgmentParser的目标：解析if语句，提取出条件，以及条件成立时的语句块
+## 示例1: if语句
+
+
+```
+IF $advice_type == "运动建议":
+    FOR $city in ${test_data.cities}:
+        @get_weather($city) -> city_weather
+        IF ${city_weather.status} == "晴天":
+            $city >> suitable_cities
+        END
+    END
+    根据$suitable_cities生成运动场所推荐 -> sport_recommendation
+elif $advice_type == "饮食建议":
+    分析当前天气生成饮食建议 -> food_recommendation
+else:
+    根据$current_weather生成着装建议 -> clothing_recommendation
+END
+```
+
+你需要从全局变量池获取到$advice_type的具体的值，然后根据$advice_type的值判断具体执行哪一个模块。
+你可以将 IF/elif 关键字到冒号中间的部分提取出来作为条件表达式。
+如果IF/elif的条件表达式都不为真，并存在else语句，则返回"other"和对应的statement语句块。
+
+JudgmentParser具体的返回值包含了2项：
+条件成立的具体的值，例如，`运动建议`, `饮食建议`，以及条件不成立时的statement语句块
+
+具体表现为：
+你需要判断$advice_type的值是否为"运动建议"，如果是，则返回如下statement
+```
+FOR $city in ${test_data.cities}:
+    @get_weather($city) -> city_weather
+    IF ${city_weather.status} == "晴天":
+        $city >> suitable_cities
+    END
+END
+```
+
+
+你需要判断$advice_type的值是否为"饮食建议"，如果是，则返回如下statement
+```
+分析当前天气生成饮食建议 -> food_recommendation
+```
+否则返回
+```
+根据$current_weather生成着装建议 -> clothing_recommendation
+```
+
+
+
+
+
+## 示例2: 更复杂的条件判断语句
+
+```
+IF ${current_weather.temperature.current} > 30 
+   and ${current_weather.humidity} > 80:
+    生成一段关于防暑的建议 -> health_advice
+    @send_email(
+        "user@example.com",
+        $health_advice
+    ) -> email_result
+elif ${current_weather.temperature.current} < 10 
+     and ${current_weather.wind_speed} > 5:
+    生成一段关于防寒的建议 -> health_advice
+    @send_email("user@example.com", $health_advice) -> email_result
+else:
+    生成一段关于适合外出活动的建议 -> health_advice
+    @send_email("user@example.com", $health_advice) -> email_result
+END
+```
+
+你需要从全局变量池获取到${current_weather.temperature.current}的具体的值，和${current_weather.humidity}
+的具体的值，然后判断`${current_weather.temperature.current} > 30 and ${current_weather.humidity} > 80`是否为真
+如果为真，则返回statement内容为：
+```
+生成一段关于防暑的建议 -> health_advice
+@send_email(
+    "user@example.com",
+    $health_advice
+) -> email_result
+```
+下述判断同理
+
+
+
+
+
+
+
+
+
+
+
+
+
+# StatementParser的example
+# StatementParser的目标：解析for循环中的statement，提取出statement中的临时变量名，以及statement
+
+
+
+
