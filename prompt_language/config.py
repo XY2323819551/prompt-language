@@ -53,6 +53,18 @@ class GlobalVariablePool:
             name = name[1:]
         self.variables[name] = value
     
+    async def append_variable(self, name: str, value: Any) -> None:
+        if name.startswith('$'):
+            name = name[1:]
+        
+        current_value = self.variables.get(name)
+        if current_value is None:
+            self.variables[name] = [value]
+        elif not isinstance(current_value, list):
+            self.variables[name] = [current_value, value]
+        else:
+            current_value.append(value)
+    
     async def variable_exists(self, name: str) -> bool:
         """检查变量是否存在"""
         return name in self.variables
@@ -60,42 +72,29 @@ class GlobalVariablePool:
 
 @dataclass
 class GlobalToolPool:
-    """全局工具池类，用于管理全局工具"""
-    
     def __init__(self):
         self.tools: Dict[str, Any] = {}
     
     async def init_tools(self, tools: Dict[str, Any]) -> None:
-        """注册单个工具"""
         self.tools = tools
     
     async def register_tool(self, name: str, tool: Any) -> None:
-        """注册单个工具"""
         self.tools[name] = tool
     
     async def register_tools(self, tools: Dict[str, Any]) -> None:
-        """批量注册工具"""
         self.tools.update(tools)
     
     async def get_all_tools(self) -> List[Any]:
-        """
-        获取所有工具对象的列表
-        
-        Returns:
-            List[Any]: 工具对象列表
-        """
         return list(self.tools.values())
     
     async def get_tool(self, name: str) -> Optional[Any]:
-        """获取指定的工具"""
         return self.tools.get(name)
     
     async def exists(self, name: str) -> bool:
-        """检查工具是否存在"""
         return name in self.tools
 
 
 # 创建全局实例
-variable_pool = GlobalVariablePool()
+gv_pool = GlobalVariablePool()
 tool_pool = GlobalToolPool()
 

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any
 from .base_block import BaseBlock
+from prompt_language.utils.prompt_logger import logger
 
 
 @dataclass
@@ -13,32 +14,26 @@ class FunctionCall:
 
 class FunctionBlock(BaseBlock):
     async def execute(self, statement, gv_pool, tool_pool) -> None:
-        assign_method, res_name, statement = await self.statement_parser.parse(statement, gv_pool)
+        logger.info(f"执行函数: {statement}")
+        
+        parser_res = await self.statement_parser.parse(statement, gv_pool)
+        assign_method, res_name, statement = parser_res.assign_method, parser_res.res_name, parser_res.statement
+        
         function_call = await self._parse_function_call(statement)
+        logger.debug(f"函数调用: {function_call}")
         
         result = await self._execute_function(function_call, tool_pool)
-        await self.save_result(res_name, result, assign_method)
+        logger.debug(f"函数返回: {result}")
+        
+        await self.save_result(res_name, result, assign_method, gv_pool)
+        logger.info(f"变量赋值: {res_name} = {result}")
+
     
     async def _execute_function(self, function_call: FunctionCall, tool_pool: Any) -> Any:
-        """
-        执行函数调用
-        
-        Args:
-            function_call: 函数调用的解析结果
-            tool_pool: 工具池实例
-            
-        Returns:
-            Any: 函数执行的结果
-            
-        Raises:
-            ValueError: 当函数不存在时抛出
-        """
-        # 从工具池中获取函数对象
         func = await tool_pool.get_tool(function_call.name)
         if not func:
             raise ValueError(f"未找到函数: {function_call.name}")
         
-        # 执行函数调用
         try:
             if function_call.kwargs:
                 result = await func(*function_call.args, **function_call.kwargs)

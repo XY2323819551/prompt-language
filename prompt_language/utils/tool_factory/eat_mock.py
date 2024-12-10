@@ -41,7 +41,7 @@ class EatTool(BaseTool):
                 message=f"吃东西时出错: {str(e)}"
             )
 
-def eat_food() -> str:
+async def eat_food() -> str:
     """
     模拟吃东西并返回结果。
 
@@ -65,8 +65,3 @@ def eat_food() -> str:
     result = tool.eat()
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    print("Testing eat food:")
-    result = eat_food()
-    print(result) 

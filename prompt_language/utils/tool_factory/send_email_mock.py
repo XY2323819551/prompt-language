@@ -45,7 +45,7 @@ class EmailTool(BaseTool):
                 message=f"发送邮件时出错: {str(e)}"
             )
 
-def send_email(email: str, content: str) -> str:
+async def send_email(email: str, content: str) -> str:
     """
     模拟发送邮件并返回结果。
 
@@ -73,11 +73,4 @@ def send_email(email: str, content: str) -> str:
     result = tool.send(email, content)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    email = "test@example.com"
-    content = "Hello World"
-    print(f"Testing send email to: {email}")
-    print("-" * 80)
-    result = send_email(email, content)
-    print(result) 
+

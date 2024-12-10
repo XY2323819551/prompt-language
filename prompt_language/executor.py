@@ -24,13 +24,13 @@ class Executor:
         while not block_queue.empty():
             block = await block_queue.get()
             if block.block_type == "loop":
-                loop_parser_result = await self.loop_parser.parse(block.statements, self.gv_pool)
+                loop_parser_result = await self.loop_parser.parse(block.statement, self.gv_pool)
                 for item in loop_parser_result.iteration_target:
-                    self.gv_pool.set_variable(loop_parser_result.variable, item)
-                    await self.execute(loop_parser_result.statement, self.gv_pool)
+                    await self.gv_pool.set_variable(loop_parser_result.variable, item)
+                    await self.execute(loop_parser_result.statement)
             elif block.block_type == "judgment":
-                judgment_parser_result = await self.judgment_parser.parse(block.statements, self.gv_pool)
-                await self.execute(judgment_parser_result.statement, self.gv_pool)
+                judgment_parser_result = await self.judgment_parser.parse(block.statement, self.gv_pool)
+                await self.execute(judgment_parser_result.statement)
             else:  # code、condition_judge、exit、agent、function
-                await self.block_router.execute_block(block.block_type, block.statements, self.gv_pool, self.tool_pool)
+                await self.block_router.execute_block(block.block_type, block.statement, self.gv_pool, self.tool_pool)
             

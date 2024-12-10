@@ -47,7 +47,7 @@ class StackExchangeTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def stack_exchange_search(query: str) -> str:
+async def stack_exchange_search(query: str) -> str:
     """
     在Stack Exchange网站上搜索并返回结果。
 
@@ -76,10 +76,4 @@ def stack_exchange_search(query: str) -> str:
     result = tool.search(query)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    query = "How to create a list in python"
-    print(f"Searching Stack Exchange for: {query}")
-    print("-" * 80)
-    result = stack_exchange_search(query)
-    print(result)
+

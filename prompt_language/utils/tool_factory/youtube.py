@@ -47,7 +47,7 @@ class YouTubeSearchTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def youtube_search(query: str) -> str:
+async def youtube_search(query: str) -> str:
     """
     在YouTube上搜索视频并返回结果。
 
@@ -78,10 +78,4 @@ def youtube_search(query: str) -> str:
     result = tool.search(query)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    query = "Lex Fridman podcast"
-    print(f"Searching YouTube for: {query}")
-    print("-" * 80)
-    result = youtube_search(query)
-    print(result)
+

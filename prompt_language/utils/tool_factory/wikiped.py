@@ -48,7 +48,7 @@ class WikipediaTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def wikipedia_search(query: str) -> str:
+async def wikipedia_search(query: str) -> str:
     """
     在Wikipedia百科中搜索内容并返回结果。
 
@@ -77,10 +77,4 @@ def wikipedia_search(query: str) -> str:
     result = tool.search(query)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    query = "Python programming language"
-    print(f"Searching Wikipedia for: {query}")
-    print("-" * 80)
-    result = wikipedia_search(query)
-    print(result)
+

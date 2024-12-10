@@ -108,7 +108,7 @@ class ArxivPDFTool(BaseTool):
             )
 
 
-def get_arxiv_pdf_content(pdf_url: str) -> str:
+async def get_arxiv_pdf_content(pdf_url: str) -> str:
     """
     从arXiv PDF URL获取文档内容。arxiv_pdf工具获取PDF文档内容。
     
@@ -135,22 +135,3 @@ def get_arxiv_pdf_content(pdf_url: str) -> str:
     result = tool.process_arxiv_pdf(pdf_url, save_local=False)
     return result.content if result.success else "内容提取失败"
 
-
-if __name__ == "__main__":
-    # 测试工具
-    tool = ArxivPDFTool()
-    
-    # 测试用的arXiv PDF URL
-    test_url = "https://arxiv.org/pdf/1706.03762.pdf"  # Attention is All You Need论文
-    
-    print("测试PDF下载和解析:")
-    result = tool.process_arxiv_pdf(test_url, save_local=True)
-    
-    if result.success:
-        print("\n文档元数据:")
-        print("\n文档总字符数: {len(result.content)}")
-        print(result.metadata)
-        print("\n文档内容预览 (前500个字符):")
-        print(result.content[:500])
-    else:
-        print(f"处理失败: {result.message}") 

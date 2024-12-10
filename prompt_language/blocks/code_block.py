@@ -3,6 +3,7 @@ from typing import Optional, Any
 import json
 from .base_block import BaseBlock
 from prompt_language.utils.model_factory import get_model_response
+from prompt_language.utils.prompt_logger import logger
 
 
 @dataclass
@@ -14,16 +15,31 @@ class CodeResult:
 
 class CodeBlock(BaseBlock):
     async def execute(self, statement, gv_pool, tool_pool) -> None:
-        assign_method, res_name, statement = await self.statement_parser.parse(statement, gv_pool)
-        code_result = await self._execute_code_block(statement)  # code_result.code先留着
-        await self.save_result(res_name, code_result.result, assign_method)
+        logger.info(f"执行代码块: {statement}")
+        
+        parser_res = await self.statement_parser.parse(statement, gv_pool)
+        assign_method, res_name, statement = parser_res.assign_method, parser_res.res_name, parser_res.statement
+
+        logger.debug(f"解析结果: {parser_res}")
+        code_result = await self._execute_code_block(statement)
+        logger.debug(f"执行结果: {code_result}")
+        
+        await self.save_result(res_name, code_result.result, assign_method, gv_pool)
+        logger.info(f"变量赋值: {res_name} = {code_result.result}")
     
     async def _execute_code_block(self, content: str) -> CodeResult:
         content = content.strip()
         
+        # 提取 @code() 中的内容
+        if not (content.startswith('@code(') and content.endswith(')')):
+            raise ValueError(f"无效的代码块格式: {content}")
+        
+        # 提取括号内的内容
+        code_content = content[6:-1].strip()  # 去掉 @code( 和 )
+        
         # JSON 类型
-        if content.startswith('```json'):
-            json_str = content[7:].strip().strip('`')
+        if code_content.startswith('```json'):
+            json_str = code_content[7:].strip().strip('`')  # 去掉 ```json 和 结尾的 ```
             try:
                 result = json.loads(json_str)
                 return CodeResult(code=None, result=result)
@@ -31,8 +47,8 @@ class CodeBlock(BaseBlock):
                 raise ValueError(f"JSON 解析错误: {str(e)}")
         
         # Python 代码类型
-        elif content.startswith('```python'):
-            python_code = content[10:].strip().strip('`')
+        elif code_content.startswith('```python'):
+            python_code = code_content[10:].strip().strip('`')  # 去掉 ```python 和 结尾的 ```
             try:
                 # 创建局部变量空间
                 local_vars = {}
@@ -49,27 +65,33 @@ class CodeBlock(BaseBlock):
             # 调用大模型生成代码
             messages = [
                 {
-                    "role": "system",
-                    "content": """你是一个 Python 代码生成器。
+                    "role": "user",
+                    "content": f"""你是一个 Python 代码生成器。
 请根据用户的自然语言描述生成可执行的 Python 代码。
 
 要求：
 1. 生成的代码必须完整且可执行
-2. 使用 result 变量存储最终结果
-3. 代码应该简洁明了
-4. 不要包含任何注释或说明
-5. 只返回代码，不要有其他内容"""
+2. 只返回代码，不要有其他内容，代码使用标准的markdown格式返回
+
+用户的自然语言描述如下：
+{code_content}
+"""
                 },
-                {
-                    "role": "user",
-                    "content": f"请生成代码实现以下功能：{content}"
-                }
             ]
             
-            generated_code = await get_model_response(
+            response = await get_model_response(
                 messages=messages,
                 temperature=0
             )
+            
+            # 从响应中提取代码
+            generated_code = response.choices[0].message.content
+            
+            # 去除 markdown 格式
+            if generated_code.startswith('```python\n'):
+                generated_code = generated_code[10:]  # 去掉 ```python\n
+            if generated_code.endswith('\n```'):
+                generated_code = generated_code[:-4]  # 去掉 \n```
             
             # 执行生成的代码
             try:

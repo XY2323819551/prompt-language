@@ -64,7 +64,7 @@ class ArxivTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def search_arxiv(query: str, max_results: int = 1) -> str:
+async def search_arxiv(query: str, max_results: int = 1) -> str:
     """
     在arXiv上搜索学术论文并返回格式化结果。
 
@@ -116,12 +116,3 @@ def search_arxiv(query: str, max_results: int = 1) -> str:
         formatted_results.append(formatted_paper)
         
     return "\n".join(formatted_results)
-
-if __name__ == "__main__":
-    # 测试代码
-    query = "Transformer architecture"
-    print(f"Searching arxiv for: {query}")
-    print("-" * 80)
-    results = search_arxiv(query)
-    print(results)
-    

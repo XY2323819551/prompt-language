@@ -90,7 +90,7 @@ class ConfigManager:
     
     def __init__(self):
         # 获取项目根目录
-        self.root_dir = Path(__file__).resolve().parent.parent
+        self.root_dir = Path(__file__).resolve().parent.parent.parent
         self.env_path = self.root_dir / '.env'
         
         # 加载环境变量
@@ -191,8 +191,8 @@ class LLMResponse:
 client_factory = LLMClientFactory()
 
 async def get_model_response(
-    model_name: str,
-    messages: List[Dict[str, str]],
+    model_name: str = "deepseek-chat",
+    messages: List[Dict[str, str]] = [],
     temperature: float = 0,
     is_json: bool = False,
     tools: Optional[List[Dict]] = None,
@@ -210,8 +210,6 @@ async def get_model_response(
         stop=stop,
         stream=stream
     )
-    if not stream:
-        return response.choices[0].message.content
     return response
 
 

@@ -57,7 +57,7 @@ class DuckDuckGoSearchTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def duckduckgo_search(query: str, raw_results: bool = False, max_results: int = 4) -> str:
+async def duckduckgo_search(query: str, raw_results: bool = False, max_results: int = 4) -> str:
     """
     使用DuckDuckGo执行网络搜索并返回结果。
 
@@ -87,13 +87,3 @@ def duckduckgo_search(query: str, raw_results: bool = False, max_results: int = 
     tool = DuckDuckGoSearchTool(raw_results=raw_results, max_results=max_results)
     result = tool.search(query)
     return result.content if result.success else result.message
-
-if __name__ == "__main__":
-    # 测试代码
-    query = "What is the capital of France?"
-    print("Testing raw search results:")
-    print(duckduckgo_search(query, raw_results=True))
-    print("\nTesting processed search results:")
-    print(duckduckgo_search(query))
-    
-    

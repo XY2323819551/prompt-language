@@ -47,7 +47,7 @@ class WikidataTool(BaseTool):
                 message=f"查询过程中出错: {str(e)}"
             )
 
-def wikidata_query(query: str) -> str:
+async def wikidata_query(query: str) -> str:
     """
     在Wikidata知识库中执行查询并返回结果。
 
@@ -75,10 +75,5 @@ def wikidata_query(query: str) -> str:
     result = tool.query(query)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试代码
-    query = "Alan Turing"
-    print(f"Querying Wikidata for: {query}")
-    print("-" * 80)
-    result = wikidata_query(query)
-    print(result)
+
+

@@ -115,13 +115,13 @@ class LoopParser:
             
         return target_start, start_idx
     
-    async def parse(self, content: str, variable_pool: Any = None) -> LoopBlock:
+    async def parse(self, content: str, gv_pool: Any = None) -> LoopBlock:
         """
         解析FOR循环块
         
         Args:
             content: 包含完整FOR循环的字符串
-            variable_pool: 变量池实例，用于解析迭代目标
+            gv_pool: 变量池实例，用于解析迭代目标
             
         Returns:
             LoopBlock: 解析后的循环块数据
@@ -151,8 +151,8 @@ class LoopParser:
         
         # 获取实际的迭代目标
         iteration_target = None
-        if variable_pool:
-            iteration_target = await self.get_iteration_target(target, variable_pool)
+        if gv_pool:
+            iteration_target = await self.get_iteration_target(target, gv_pool)
         
         return LoopBlock(
             variable=variable,
@@ -172,13 +172,13 @@ class LoopParser:
         elements = [elem.strip().strip('"\'') for elem in content.split(',')]
         return [elem for elem in elements if elem]  # 移除空元素
     
-    async def get_iteration_target(self, target: str, variable_pool: Any) -> Any:
+    async def get_iteration_target(self, target: str, gv_pool: Any) -> Any:
         """
         获取循环的目标对象
         
         Args:
             target: 目标字符串
-            variable_pool: 变量池实例
+            gv_pool: 变量池实例
             
         Returns:
             可迭代对象
@@ -194,19 +194,19 @@ class LoopParser:
             # 处理字典字段访问
             if '.' in var_expr:
                 var_name, field = var_expr.split('.', 1)
-                var_obj = await variable_pool.get_variable(var_name.strip('$'))
+                var_obj = await gv_pool.get_variable(var_name.strip('$'))
                 return var_obj[field] if var_obj else None
             # 处理列表索引访问
             elif '[' in var_expr and ']' in var_expr:
                 var_name = var_expr[:var_expr.find('[')]
                 index = int(var_expr[var_expr.find('[')+1:var_expr.find(']')])
-                var_obj = await variable_pool.get_variable(var_name.strip('$'))
+                var_obj = await gv_pool.get_variable(var_name.strip('$'))
                 return var_obj[index] if var_obj else None
         
         # 处理简单变量 $var
         if target.startswith('$'):
             var_name = target.strip('$')
-            return await variable_pool.get_variable(var_name)
+            return await gv_pool.get_variable(var_name)
         
         return None
 
@@ -339,13 +339,13 @@ class JudgmentParser:
             
         return '\n'.join(block_lines), current_idx - 1
     
-    async def _evaluate_condition(self, condition: str, variable_pool: Any) -> bool:
+    async def _evaluate_condition(self, condition: str, gv_pool: Any) -> bool:
         """
         评估条件表达式
         
         Args:
             condition: 条件表达式
-            variable_pool: 变量池实例
+            gv_pool: 变量池实例
             
         Returns:
             条件是否为真
@@ -362,12 +362,12 @@ class JudgmentParser:
             # 处理嵌套属性
             if '.' in var_expr:
                 parts = var_expr.split('.')
-                var_obj = await variable_pool.get_variable(parts[0].strip('$'))
+                var_obj = await gv_pool.get_variable(parts[0].strip('$'))
                 for part in parts[1:]:
                     var_obj = var_obj[part]
                 var_value = var_obj
             else:
-                var_value = await variable_pool.get_variable(var_expr.strip('$'))
+                var_value = await gv_pool.get_variable(var_expr.strip('$'))
                 
             condition = condition.replace(f"${{{var_expr}}}", repr(var_value))
             
@@ -378,7 +378,7 @@ class JudgmentParser:
                 break
                 
             var_name = match.group(0)[1:]  # 移除$前缀
-            var_value = await variable_pool.get_variable(var_name)
+            var_value = await gv_pool.get_variable(var_name)
             condition = condition.replace(f"${var_name}", repr(var_value))
             
         # 评估条件
@@ -387,13 +387,13 @@ class JudgmentParser:
         except Exception as e:
             raise ValueError(f"条件表达式评估失败: {str(e)}")
     
-    async def parse(self, content: str, variable_pool: Any = None) -> JudgmentBlock:
+    async def parse(self, content: str, gv_pool: Any = None) -> JudgmentBlock:
         """
         解析IF判断块
         
         Args:
             content: 包含完整IF判断的字符串
-            variable_pool: 变量池实例
+            gv_pool: 变量池实例
             
         Returns:
             JudgmentBlock: 解析后的判断块数据
@@ -411,7 +411,7 @@ class JudgmentParser:
                 block, block_end = self._extract_block(lines, end_idx)
                 
                 # 评估IF条件
-                if variable_pool and await self._evaluate_condition(condition, variable_pool):
+                if gv_pool and await self._evaluate_condition(condition, gv_pool):
                     return JudgmentBlock(
                         condition_value=condition,
                         statement=self._normalize_indent(block)
@@ -426,7 +426,7 @@ class JudgmentParser:
                 block, block_end = self._extract_block(lines, end_idx)
                 
                 # 评估elif条件
-                if variable_pool and await self._evaluate_condition(condition, variable_pool):
+                if gv_pool and await self._evaluate_condition(condition, gv_pool):
                     return JudgmentBlock(
                         condition_value=condition,
                         statement=self._normalize_indent(block)
@@ -459,13 +459,13 @@ class StatementParser:
         self.variable_pattern = re.compile(r'\$[a-zA-Z_][a-zA-Z0-9_]*')
         self.complex_variable_pattern = re.compile(r'\${([^}]+)}')
     
-    async def parse(self, content: str, variable_pool: Any = None) -> Statement:
+    async def parse(self, content: str, gv_pool: Any = None) -> Statement:
         """
         解析单条语句
         
         Args:
             content: 语句字符串
-            variable_pool: 变量池实例，用于解析变量引用
+            gv_pool: 变量池实例，用于解析变量引用
             
         Returns:
             Statement: 解析后的语句数据
@@ -491,8 +491,8 @@ class StatementParser:
             res_name = parts[1].strip()
         
         # 如果有变量池，处理变量引用
-        if variable_pool:
-            statement = await self._replace_variables(statement, variable_pool)
+        if gv_pool:
+            statement = await self._replace_variables(statement, gv_pool)
         
         return Statement(
             assign_method=assign_method,
@@ -500,13 +500,13 @@ class StatementParser:
             statement=statement
         )
     
-    async def _replace_variables(self, content: str, variable_pool: Any) -> str:
+    async def _replace_variables(self, content: str, gv_pool: Any) -> str:
         """
         替换内容中的变量引用
         
         Args:
             content: 包含变量引用的字符串
-            variable_pool: 变量池实例
+            gv_pool: 变量池实例
             
         Returns:
             处理后的字符串
@@ -525,13 +525,13 @@ class StatementParser:
             # 处理嵌套属性
             if '.' in var_expr:
                 parts = var_expr.split('.')
-                var_obj = await variable_pool.get_variable(parts[0].strip('$'))
+                var_obj = await gv_pool.get_variable(parts[0].strip('$'))
                 if var_obj:
                     for part in parts[1:]:
                         var_obj = var_obj[part]
                     var_value = var_obj
             else:
-                var_value = await variable_pool.get_variable(var_expr.strip('$'))
+                var_value = await gv_pool.get_variable(var_expr.strip('$'))
                 
             if var_value is not None:
                 result = result.replace(f"${{{var_expr}}}", str(var_value))
@@ -546,7 +546,7 @@ class StatementParser:
                 break
                 
             var_name = match.group(0)[1:]  # 移除$前缀
-            var_value = await variable_pool.get_variable(var_name)
+            var_value = await gv_pool.get_variable(var_name)
             
             if var_value is not None:
                 result = result.replace(f"${var_name}", str(var_value))

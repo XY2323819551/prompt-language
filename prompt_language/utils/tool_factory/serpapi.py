@@ -63,7 +63,7 @@ class SearchTool(BaseTool):
                 message=f"搜索过程中出错: {str(e)}"
             )
 
-def serpapi_search(query: str) -> str:
+async def serpapi_search(query: str) -> str:
     """
     使用SerpAPI执行网络搜索并返回结果。
 
@@ -92,8 +92,4 @@ def serpapi_search(query: str) -> str:
     result = tool.search_web(query)
     return result.content if result.success else result.message
 
-if __name__ == "__main__":
-    # 测试搜索
-    print("Testing web search:")
-    result = serpapi_search("什么是人工智能？")
-    print(result) 
+

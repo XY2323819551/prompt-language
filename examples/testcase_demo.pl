@@ -54,7 +54,7 @@ IF ${current_weather.temperature.current} > 30
         $health_advice
     ) -> email_result
 elif ${current_weather.temperature.current} < 10 
-     and ${current_weather.wind.speed} > 5:
+     and ${current_weather.wind_speed} > 5:
     生成一段关于防寒的建议 -> health_advice
     @send_email("user@example.com", $health_advice) -> email_result
 else:

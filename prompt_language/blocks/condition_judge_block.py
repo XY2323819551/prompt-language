@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Union
 from .base_block import BaseBlock
 from prompt_language.utils.model_factory import get_model_response
+from prompt_language.utils.prompt_logger import logger
 
 
 @dataclass
@@ -13,11 +14,21 @@ class ConditionJudge:
 
 class ConditionJudgeBlock(BaseBlock):
     async def execute(self, statement, gv_pool, tool_pool) -> None:
-        assign_method, res_name, statement = await self.statement_parser.parse(statement, gv_pool)
+        logger.info(f"执行条件判断: {statement}")
         
+        parser_res = await self.statement_parser.parse(statement, gv_pool)
+        assign_method, res_name, statement = parser_res.assign_method, parser_res.res_name, parser_res.statement
+        
+        logger.debug(f"解析结果: {parser_res}")
         condition = await self._parse_condition(statement)
+        logger.debug(f"条件解析: {condition}")
+        
         result = await self._classify_content(condition)
-        await self.save_result(res_name, result, assign_method)
+        logger.debug(f"分类结果: {result}")
+        
+        await self.save_result(res_name, result, assign_method, gv_pool)
+        logger.info(f"变量赋值: {res_name} = {result}")
+
     
     async def _parse_condition(self, statement: str) -> ConditionJudge:
         """
@@ -86,7 +97,7 @@ class ConditionJudgeBlock(BaseBlock):
         )
         
         # 确保结果在类别列表中
-        result = result.strip()
+        result = result.choices[0].message.content.strip()
         if result in condition.categories:
             return result
         return "no_answer"  # 如果结果不在类别列表中，返回第一个类别

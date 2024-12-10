@@ -16,8 +16,7 @@ class GlobalParser:
     """全局解析器，用于解析整个文件并将其分解为代码块"""
     
     def __init__(self):
-        self.blocks = asyncio.Queue()
-        self.current_block = []
+        pass
         
     def _is_block_start(self, line: str) -> tuple[bool, str]:
         """判断是否是block的开始"""
@@ -241,6 +240,7 @@ class GlobalParser:
 
     async def parse(self, content: str) -> asyncio.Queue:
         """异步解析整个文件内容，返回异步队列"""
+        blocks = asyncio.Queue()
         lines = content.split('\n')
         i = 0
         
@@ -263,7 +263,7 @@ class GlobalParser:
                             block_type=block_type,
                             statement='\n'.join(lines[i:end_idx + 1])
                         )
-                        await self.blocks.put(block)
+                        await blocks.put(block)
                         i = end_idx
                 else:
                     # 处理基础语句
@@ -271,9 +271,7 @@ class GlobalParser:
                     if end_idx >= start_idx:
                         statement = '\n'.join(lines[start_idx:end_idx + 1])
                         block = Block(block_type=block_type, statement=statement)
-                        await self.blocks.put(block)
+                        await blocks.put(block)
                         i = end_idx
-            
             i += 1
-        
-        return self.blocks
+        return blocks

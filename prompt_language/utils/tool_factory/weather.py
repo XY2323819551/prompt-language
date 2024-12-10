@@ -84,7 +84,7 @@ class WeatherTool(BaseTool):
                 message=f"获取天气信息时出错: {str(e)}"
             )
 
-def get_weather(city: str) -> str:
+async def get_weather(city: str) -> str:
     """
     获取指定城市的天气信息。
 
@@ -136,9 +136,6 @@ def get_weather(city: str) -> str:
     """
     tool = WeatherTool()
     result = tool.get_weather(city)
-    return json.dumps(result.content, ensure_ascii=False) if result.success else result.message
+    return result.content if result.success else result.message
 
-if __name__ == '__main__':
-    # 测试代码
-    print("Testing weather information:")
-    print(get_weather('shanghai'))
+
