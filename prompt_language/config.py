@@ -77,9 +77,14 @@ class GlobalToolPool:
         """批量注册工具"""
         self.tools.update(tools)
     
-    async def get_all_tools(self) -> Dict[str, Any]:
-        """获取所有工具"""
-        return self.tools.copy()
+    async def get_all_tools(self) -> List[Any]:
+        """
+        获取所有工具对象的列表
+        
+        Returns:
+            List[Any]: 工具对象列表
+        """
+        return list(self.tools.values())
     
     async def get_tool(self, name: str) -> Optional[Any]:
         """获取指定的工具"""

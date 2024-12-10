@@ -12,9 +12,9 @@ class BaseBlock(ABC):
         """执行具体的block逻辑"""
         pass
     
-    async def save_result(self, key: str, value: Any, append: bool = False) -> None:
+    async def save_result(self, key, value, assign_method) -> None:
         """保存结果到变量池"""
-        if append:
+        if assign_method in ["->"]:
             await self.variable_pool.append_variable(key, value)
-        else:
+        elif assign_method in [">>"]:
             await self.variable_pool.set_variable(key, value) 
