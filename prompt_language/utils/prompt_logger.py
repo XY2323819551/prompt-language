@@ -1,5 +1,6 @@
 import logging
 import sys
+import traceback
 from datetime import datetime
 from typing import Any
 from pathlib import Path
@@ -13,7 +14,7 @@ class BlockColor:
     FUNCTION = '\033[38;5;45m'   # 蓝色
     LLM = '\033[38;5;135m'       # 紫色
     CONDITION = '\033[38;5;118m' # 绿色
-    AGENT = '\033[38;5;203m'     # 红色
+    AGENT = '\033[38;5;218m'     # 粉色
     EXIT = '\033[38;5;244m'      # 灰色
     LOOP = '\033[38;5;226m'      # 黄色
     JUDGMENT = '\033[38;5;51m'   # 青色
@@ -48,15 +49,16 @@ class PromptLogger:
         handler.setLevel(self.logger.level)
         self.logger.addHandler(handler)
     
-    def _get_caller_info(self) -> tuple[str, str]:
+    def _get_caller_info(self) -> tuple[str, str, int]:
         """获取调用者信息"""
         frame = inspect.currentframe()
         caller = inspect.getouterframes(frame)[2]
         
         filename = Path(caller.filename).name
         block_type = filename.replace('_block.py', '').upper()
+        line_no = caller.lineno
         
-        return filename, block_type
+        return filename, block_type, line_no
     
     def _get_block_color(self, block_type: str) -> str:
         """获取block类型对应的颜色"""
@@ -80,21 +82,29 @@ class PromptLogger:
     
     def debug(self, message: Any) -> None:
         """调试信息"""
-        filename, block_type = self._get_caller_info()
+        filename, block_type, line_no = self._get_caller_info()
         formatted_msg = self._format_message(message, block_type, filename)
         self.logger.debug(formatted_msg)
     
     def info(self, message: Any) -> None:
         """一般信息"""
-        filename, block_type = self._get_caller_info()
+        filename, block_type, line_no = self._get_caller_info()
         formatted_msg = self._format_message(message, block_type, filename)
         self.logger.info(formatted_msg)
     
     def error(self, message: Any) -> None:
         """错误信息"""
-        filename, block_type = self._get_caller_info()
-        formatted_msg = f"{BlockColor.ERROR}[ERROR] {block_type}:{filename} - {message}{BlockColor.RESET}"
-        self.logger.error(formatted_msg)
+        filename, block_type, line_no = self._get_caller_info()
+        formatted_msg = f"{BlockColor.ERROR}[ERROR] {block_type}:{filename}:{line_no} - {message}"
+        # 添加堆栈跟踪信息
+        if isinstance(message, Exception):
+            formatted_msg += f"\n\nTraceback (most recent call last):\n{traceback.format_exc()}{BlockColor.RESET}"
+            # self.logger.error(formatted_msg, exc_info=True)
+            self.logger.error(formatted_msg, exc_info=False)
+
+        else:
+            formatted_msg += BlockColor.RESET
+            self.logger.error(formatted_msg)
 
 
 # 创建全局实例

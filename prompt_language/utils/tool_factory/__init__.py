@@ -9,6 +9,7 @@ from .wikiped import wikipedia_search
 from .youtube import youtube_search
 from .eat_mock import eat_food
 from .send_email_mock import send_email
+from .code_execute import code_execute
 
 __all__ = [
     'search_arxiv',
@@ -17,5 +18,6 @@ __all__ = [
     'get_weather',
     'wikipedia_search',
     'eat_food',
-    'send_email'
+    'send_email',
+    'code_execute'
 ]

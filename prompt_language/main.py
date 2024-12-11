@@ -8,7 +8,8 @@ from prompt_language.utils.tool_factory import (
     get_weather,
     wikipedia_search,
     eat_food,
-    send_email
+    send_email,
+    code_execute
 )
 
 
@@ -23,7 +24,8 @@ async def main():
         "search_arxiv": search_arxiv,
         "search_web": serpapi_search,
         "get_weather": get_weather,
-        "send_email": send_email
+        "send_email": send_email,
+        "code_execute": code_execute
     }
     await executor.init_execute(variables, tools)
     
@@ -53,6 +55,7 @@ async def test_main():
         "get_weather": get_weather,
         "send_email": send_email,
         "wikipedia_search": wikipedia_search,
+        "code_execute": code_execute
     }
     await executor.init_execute(variables, tools)
     
@@ -94,6 +97,7 @@ async def test_from_file():
         "send_email": send_email,
         "wikipedia_search": wikipedia_search,
         "eat_food": eat_food,
+        "code_execute": code_execute
     }
     
     # 初始化变量
@@ -107,6 +111,8 @@ async def test_from_file():
     
     # 读取测试文件
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/testcase.pl"
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/test_agent.pl"
+
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             prompt = f.read()
