@@ -1,4 +1,5 @@
 import os
+import logging
 from pathlib import Path
 from typing import Optional, Union, List, Dict, Any
 from dataclasses import dataclass
@@ -8,6 +9,8 @@ from dotenv import load_dotenv
 from groq import Groq, AsyncGroq
 from openai import OpenAI, AsyncOpenAI
 from together import Together, AsyncTogether
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 class ModelProvider(Enum):

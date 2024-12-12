@@ -121,6 +121,7 @@ async def test_from_file():
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_pua.pl"
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_fighter.pl"
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/refine_agent.pl"
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/autodecision_agent.pl"
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             prompt = f.read()

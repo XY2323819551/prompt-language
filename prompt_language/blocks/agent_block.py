@@ -30,14 +30,14 @@ class AgentBlock(BaseBlock):
         agent = await self._create_agent(agent_params, tool_pool)
         logger.debug(f"创建Agent: {agent}")
 
-        bambo_agent_result = ""
+        agent_result = ""
         async for item in agent.execute(agent_params.get("task", "")):
-            bambo_agent_result += item
+            agent_result += item
             print(item, end="", flush=True)
 
-        logger.debug(f"Agent执行结果: {bambo_agent_result}")
-        await self.save_result(res_name, bambo_agent_result, assign_method, gv_pool)
-        logger.info(f"变量赋值: {res_name} = {bambo_agent_result}")
+        logger.debug(f"Agent执行结果: {agent_result}")
+        await self.save_result(res_name, agent_result, assign_method, gv_pool)
+        logger.info(f"变量赋值: {res_name} = {agent_result}")
 
     def _parse_agent_params(self, statement: str, gv_pool: Dict[str, Any]) -> Dict[str, Any]:
         """解析 agent 参数"""
