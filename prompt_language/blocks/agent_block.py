@@ -5,8 +5,7 @@ from prompt_language.utils.prompt_logger import logger
 from prompt_language.utils.agent_factory import (
     BamboAgent, 
     PromptBasedAgent, 
-    AutoDecisionAgent, 
-    PlanAndExecuteAgent
+    AutoDecisionAgent
 )
 import traceback
 
@@ -16,8 +15,7 @@ class AgentBlock(BaseBlock):
     AGENT_MAPPING = {
         "bambo": BamboAgent,
         "prompt-based": PromptBasedAgent,
-        "auto-decision": AutoDecisionAgent,
-        "plan-and-execute": PlanAndExecuteAgent
+        "auto-decision": AutoDecisionAgent
     }
     
     async def execute(self, statement, gv_pool, tool_pool) -> None:

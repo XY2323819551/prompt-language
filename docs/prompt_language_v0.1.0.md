@@ -198,7 +198,7 @@ END
 
 - 标识符：`@agent(type="", task="", roles={}, tools=[]) -> agent_name`
 
-  - 参数type：`prompt-based`、`bambo`、`auto-decision`、`plan-and-execute`。（默认为`auto-decision`模式）
+  - 参数type：`prompt-based`、`bambo`、`auto-decision`。（默认为`auto-decision`模式）
   - 参数task：用户任务，自然语言表述。（必填项）
   - 参数roles：主要给`bambo`使用
   - 参数tools：可以指定tools的范围。（默认使用全局变量池中的所有工具）

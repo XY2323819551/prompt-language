@@ -14,7 +14,6 @@
 # agent type
 - bambo: role-play agent
 - prompt-based agent: 基于prompt的agent
-- plan-and-execute agent: 计划执行agent
 - auto-decision agent: 自动决策agent
 
 
