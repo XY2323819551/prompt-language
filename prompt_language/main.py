@@ -11,6 +11,8 @@ from prompt_language.utils.tool_factory import (
     send_email,
     code_execute
 )
+from prompt_language.utils.prompt_logger import logger
+import logging
 
 
 async def main():
@@ -86,6 +88,9 @@ END
 
 
 async def test_from_file():
+    # 设置日志级别
+    logger.logger.setLevel(logging.INFO)
+    
     # 初始化执行器
     executor = Executor()
     
@@ -112,7 +117,10 @@ async def test_from_file():
     # 读取测试文件
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/testcase.pl"
     file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/test_agent.pl"
-
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/bambo_agent_notebook.pl"
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_pua.pl"
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_fighter.pl"
+    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/refine_agent.pl"
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             prompt = f.read()

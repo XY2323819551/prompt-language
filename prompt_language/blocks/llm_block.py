@@ -7,12 +7,13 @@ from prompt_language.utils.prompt_logger import logger
 
 class LLMBlock(BaseBlock):
     async def execute(self, statement, gv_pool, tool_pool) -> None:
-        logger.info(f"执行LLM调用: {statement}")
+        logger.debug(f"执行LLM调用: {statement}")
         
         parser_res = await self.statement_parser.parse(statement, gv_pool)
         assign_method, res_name, statement = parser_res.assign_method, parser_res.res_name, parser_res.statement
         
         logger.debug(f"解析结果: {parser_res}")
+        logger.info(f"执行LLM调用: {statement}")
         result = await self._call_llm(statement, tool_pool)
         logger.debug(f"LLM返回: {result}")
         

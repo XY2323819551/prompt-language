@@ -198,7 +198,7 @@ END
 
 - 标识符：`@agent(type="", task="", roles={}, tools=[]) -> agent_name`
 
-  - 参数type：`prompt-based`、`bambo`、`auto-decision`、`self-refine`、`plan-and-execute`。（默认为`auto-decision`模式）
+  - 参数type：`prompt-based`、`bambo`、`auto-decision`、`plan-and-execute`。（默认为`auto-decision`模式）
   - 参数task：用户任务，自然语言表述。（必填项）
   - 参数roles：主要给`bambo`使用
   - 参数tools：可以指定tools的范围。（默认使用全局变量池中的所有工具）
@@ -211,11 +211,9 @@ END
 
   ```
   @agent(type="auto-decision", task="查一下上海的天气，根据天气情况写一首诗，并将结果发送到我的邮箱", tools=[])-> weather_agent
-  
-  @agent(type="self-refine", task="把下面句子翻译次成为英文：昨夜雨疏风骤，浓睡不消残酒", tools=[])-> translate_agent
   ```
 
-- **Tips：**self-refine、self-reflection、self-critical、plan-and-execute都可以通过workflow配置出来。所以我的prompt block的解析需要支持不同的模型、tool集合。但是我不想配置，我想直接指定一个type即可。所以将这几个框架抽象出来，作为内置agent
+- **Tips：**self-refine、self-reflection、self-critical、plan-and-execute都可以通过workflow配置出来。
 
 
 

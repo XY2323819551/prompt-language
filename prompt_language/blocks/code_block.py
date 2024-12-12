@@ -48,15 +48,16 @@ class CodeBlock(BaseBlock):
         
         # Python 代码类型
         elif code_content.startswith('```python'):
-            python_code = code_content[10:].strip().strip('`')  # 去掉 ```python 和 结尾的 ```
+            python_code = code_content[10:].strip().strip('`').rstrip('\n')  # 去掉 ```python 和 结尾的 ```
             try:
-                # 创建局部变量空间
+                globals_dict = {'__builtins__': __builtins__}
                 local_vars = {}
-                # 执行代码
-                exec(python_code, {}, local_vars)
-                # 获取结果（如果有）
-                result = local_vars.get('result', None)
-                return CodeResult(code=None, result=result)
+                exec(python_code, globals_dict, local_vars)
+                last_assigned_var = None
+                for var_name in local_vars:
+                    if not var_name.startswith('__'):
+                        last_assigned_var = local_vars[var_name]
+                return CodeResult(code=None, result=last_assigned_var)
             except Exception as e:
                 raise ValueError(f"Python 代码执行错误: {str(e)}")
         

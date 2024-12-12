@@ -531,6 +531,7 @@ class StatementParser:
                         var_obj = var_obj[part]
                     var_value = var_obj
             else:
+                breakpoint()
                 var_value = await gv_pool.get_variable(var_expr.strip('$'))
                 
             if var_value is not None:
