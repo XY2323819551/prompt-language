@@ -26,8 +26,8 @@ class AutoDecisionAgent():
             tools_describe.append({tool_name: tool_desc})
 
         init_react_prompt = f"""
-你是一个中文AI助手。除了格式关键词外，请始终使用中文回复。
-尽可能好地回答以下问题。你��以使用以下工具：
+你是一个中文AI助手。擅长一步一步思考，将问题拆分为一串子问题。除了格式关键词外，请始终使用中文回复。
+尽可能好地回答以下问题。你可以以使用以下工具：
 
 {tools_describe}
 
