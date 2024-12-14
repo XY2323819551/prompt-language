@@ -1,7 +1,11 @@
-from load_local_api_keys import load_local_api_keys
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
+
+# 加载.env文件
+load_dotenv()
 
 async def dict_to_multiline_string(d, indent=0):
     result = ""
@@ -13,17 +17,14 @@ async def dict_to_multiline_string(d, indent=0):
             result += " " * indent + f"{key}: {value}\n"
     return result
 
-async def send_email(content="", subject="", to="", params_format=False):
-    if params_format:
-        return ['content', 'subject', 'to']
-
+async def send_email(content="", subject="", to_addrs="xyzhang290@gmail.com"):
     # Set up the SMTP server
     smtp_server = "smtp.qq.com"
     smtp_port = 465  # 修改为SSL端口465
-    smtp_username = "823707202@qq.com"
-    # 需要使用应用专用密码而不是普通密码
-    # 请在Google账户设置中生成应用专用密码: https://myaccount.google.com/security
-    smtp_password = load_local_api_keys("qq_mail_shouquanma") # 替换为应用专用密码
+    smtp_username = "2323819551@qq.com"
+    smtp_password = os.getenv("QQAYTHORIZATIONCODE")  # 从.env文件中读取QQ邮箱授权码
+    if not smtp_password:
+        raise ValueError("未找到QQ邮箱授权码，请检查.env文件中的QQAYTHORIZATIONCODE配置")
     
     # Create the email message
     msg = MIMEMultipart()
@@ -41,9 +42,9 @@ async def send_email(content="", subject="", to="", params_format=False):
         # 连接 SMTP 服务器
         server = smtplib.SMTP_SSL(smtp_server, smtp_port)  # 使用 SSL 加密
         server.login(smtp_username, smtp_password)  # 登录邮箱
-        server.sendmail(from_addr=smtp_username, to_addrs="lby15356@gmail.com", msg=msg.as_string())  # 发送邮件
+        server.sendmail(from_addr=smtp_username, to_addrs=to_addrs, msg=msg.as_string())  # 发送邮件
         print("邮件发送成功！")
-        return f"Send email to {to} successfully"
+        return f"Send email to {to_addrs} successfully"
     except smtplib.SMTPException as e:
         print(f"邮件发送失败：{e}")
         return "failed"
@@ -66,5 +67,5 @@ Reframing Dialogue Interaction with Fine-grained Element Modeling\'，该论文�
 准确预测不同挑战条件下的主动说话者，并提供了可解释性。第四篇是\'Stag-1: Towards Realistic 4D Driving Simulation with Video Generation Model\'，该论文提出 
 了Stag-1模型，用于实现逼真的4D驾驶模拟，通过视频生成模型创建照片级真实感和可控的4D驾驶模拟视频。"\n    }\n}\n```'
 """
-    res = asyncio.run(send_email(content, "1", to="lby15356@gmail.com"))
+    res = asyncio.run(send_email(content, "test", to_addrs="xyzhang290@gmail.com"))
     print(res)

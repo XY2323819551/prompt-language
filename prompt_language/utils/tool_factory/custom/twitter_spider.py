@@ -27,11 +27,8 @@ async def twitter_spider(keyword="", nums=5, params_format=False):
         
     try:
         # 创建Twitter API客户端
-        
         search_url = "https://api.twitter.com/2/tweets/search/recent"
-
         params = {'query': '(from:twitterdev -is:retweet) OR #twitterdev','tweet.fields': 'author_id'}
-
         response = requests.get(search_url, auth=bearer_oauth, params=params)
         print(response.status_code)
         if response.status_code != 200:

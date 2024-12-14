@@ -1,10 +1,7 @@
 import arxiv
 
 
-async def arxiv_search(keyword="", nums=1, params_format=False):
-  if params_format:
-    return ['keyword', 'nums']
-  
+async def arxiv_search(keyword="", nums=1):
   client = arxiv.Client()
   search = arxiv.Search(
     query = keyword,

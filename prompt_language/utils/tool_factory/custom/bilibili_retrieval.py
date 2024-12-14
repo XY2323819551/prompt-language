@@ -6,15 +6,12 @@ import os
 os.environ['HTTP_PROXY'] = 'http://127.0.0.1:80'
 os.environ['HTTPS_PROXY'] = 'https://127.0.0.1:80'
 
-async def bilibili_retrival(keyword="", nums=5, params_format=False):
+async def bilibili_retrival(keyword="", nums=5):
     """
     爬取B站视频字幕
     keyword: 搜索关键词
     nums: 搜索视频数目
     """
-    if params_format:
-        return ['keyword', 'nums']
-        
     try:
         # 搜索视频
         resp = await search.search_by_type(keyword, search_type=search.SearchObjectType.VIDEO, page=1)
@@ -25,7 +22,6 @@ async def bilibili_retrival(keyword="", nums=5, params_format=False):
             v = video.Video(bvid=video_id)
             
             # 获取字幕
-            breakpoint()
             subtitle_list = await v.get_subtitle(item['id'])
             
             if subtitle_list:

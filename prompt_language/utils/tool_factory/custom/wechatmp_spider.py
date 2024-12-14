@@ -44,43 +44,51 @@ class WeixinCrawler:
             # 获取当前页面的HTML
             page = etree.HTML(self.driver.page_source)
             
-            # 提取基本信息
-            
+            # 提取页面上的url基本信息
             url = page.xpath(f'/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/h3/a/@href')
             if len(url) > 0:
                 url = url[0]
             else:
                 url = []
             
+            # 获取标题信息
             title = page.xpath(f'/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/h3/a/text()')
             if len(title) > 0:
                 title = title[0]
             else:
                 title = ""
+            title = title.replace('\\', ' ').replace('/', ' ')[:15]
+            
+            # 获取时间信息
             time_str = page.xpath(f'/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/div/span[2]/text()')
             if len(time_str) > 0:
                 time_str = time_str[0]
             else:
                 time_str = ""
+            
+            # 获取摘要
             abstract = page.xpath(f'/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/p/text()')
             if len(abstract) > 0:
                 abstract = abstract[0]
             else:
                 abstract = ""
+            # 获取用户id，公众号名称
             user_id = page.xpath(f'/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/div/span[1]/text()')
             if len(user_id) > 0:
                 user_id = user_id[0]
             else:
                 user_id = ""
-            title = title.replace('\\', ' ').replace('/', ' ')[:15]
+            
             # 点击链接打开新页面s
             article_link = self.driver.find_element(By.XPATH, 
                 f"/html/body/div[2]/div[1]/div[3]/ul/li[{i+1}]/div[2]/h3/a")
             article_link.click()
             time.sleep(2)
+            
             # 切换到新窗口
             self.driver.switch_to.window(self.driver.window_handles[-1])
             time.sleep(2)
+            
             # 等待内容加载
             try:
                 content_element = self.wait.until(EC.presence_of_element_located(
@@ -89,6 +97,7 @@ class WeixinCrawler:
             except:
                 continue
             time.sleep(2)
+            
             # 保存结果
             result = {
                 'url': url,

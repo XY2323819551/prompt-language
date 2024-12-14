@@ -33,7 +33,7 @@ async def get_paper_detail(session, base_url, paper_url):
         print(f"获取论文详情失败: {str(e)}")
         return None
 
-async def paper_with_code_search(nums: int = 10, params_format: bool = False):
+async def paper_with_code_search(nums: int = 10):
     """
     获取 Papers with Code 网站今日发布的论文信息
     
@@ -44,9 +44,6 @@ async def paper_with_code_search(nums: int = 10, params_format: bool = False):
     Returns:
         list: 论文信息列表，每个元素包含标题、作者、发表时间、摘要和star数
     """
-    if params_format:
-        return ['nums']
-        
     try:
         base_url = "https://paperswithcode.com"
         url = f"{base_url}/latest"
@@ -62,7 +59,7 @@ async def paper_with_code_search(nums: int = 10, params_format: bool = False):
                 html_content = await response.text()
                 tree = html.fromstring(html_content)
                 papers = []
-                
+                breakpoint()
                 # 获取论文列表
                 for i in range(1, nums + 1):
                     try:
