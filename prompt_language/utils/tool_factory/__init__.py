@@ -1,15 +1,15 @@
-from .arxiv import search_arxiv
-from .arxiv_pdf import get_arxiv_pdf_content
-from .duckduckgo import duckduckgo_search
-from .serpapi import serpapi_search
-from .stack_exchange import stack_exchange_search
-from .weather import get_weather
-from .wikidata import wikidata_query
-from .wikiped import wikipedia_search
-from .youtube import youtube_search
-from .eat_mock import eat_food
-from .send_email_mock import send_email
-from .code_execute import code_execute
+from .default.arxiv import search_arxiv
+from .default.arxiv_pdf import get_arxiv_pdf_content
+from .default.duckduckgo import duckduckgo_search
+from .default.serpapi import serpapi_search
+from .default.stack_exchange import stack_exchange_search
+from .default.weather import get_weather
+from .default.wikidata import wikidata_query
+from .default.wikiped import wikipedia_search
+from .default.youtube import youtube_search
+from .default.eat_mock import eat_food
+from .default.send_email_mock import send_email
+from .default.code_execute import code_execute
 
 __all__ = [
     'search_arxiv',

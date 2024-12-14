@@ -31,6 +31,6 @@ class Executor:
             elif block.block_type == "judgment":
                 judgment_parser_result = await self.judgment_parser.parse(block.statement, self.gv_pool)
                 await self.execute(judgment_parser_result.statement)
-            else:  # code、condition_judge、exit、agent、function
+            else:
                 await self.block_router.execute_block(block.block_type, block.statement, self.gv_pool, self.tool_pool)
             
