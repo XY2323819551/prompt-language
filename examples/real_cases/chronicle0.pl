@@ -6,6 +6,7 @@ query = get_query()
 
 @duckduckgo_search($query) >> search_result
 @bing_search($query) >> search_result
+@google_search($query) >> search_result
 
 @deduplicate($search_result) -> deduplicated_result
 @save2local(content=$deduplicated_result, filename="books/event_raws.json") -> status

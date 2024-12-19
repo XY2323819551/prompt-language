@@ -3,15 +3,15 @@ import json
 import aiofiles
 from typing import Union
 
-async def read_local(filepath: str) -> Union[str, list, dict]:
-    full_path = os.path.join("output", filepath)
+async def read_local(filename: str) -> Union[str, list, dict]:
+    full_path = os.path.join("output", filename)
     if not os.path.exists(full_path):
         raise FileNotFoundError(f"文件不存在: {full_path}")
     
     async with aiofiles.open(full_path, 'r', encoding='utf-8') as f:
         content = await f.read()
     
-    _, ext = os.path.splitext(filepath)  # 根据文件扩展名处理内容
+    _, ext = os.path.splitext(filename)  # 根据文件扩展名处理内容
     
     if ext == '.json':
         try:

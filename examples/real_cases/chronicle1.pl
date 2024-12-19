@@ -1,6 +1,6 @@
-@read_local(filename="books/event_raws.json") -> event_names
+@read_local(filename="books/event_raws.json") -> search_result
 
-For $res in $search_result:
+FOR $res in $search_result:
     请找出下列内容信息中提到的重要历史事件。内容信息如下：
     $res
 

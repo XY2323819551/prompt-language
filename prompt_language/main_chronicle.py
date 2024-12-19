@@ -36,7 +36,7 @@ async def test_from_file():
     await executor.init_execute(variables, tools)
     # 测试
     root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/real_cases/"
-    file_path = root_path + "chronicle0.pl"
+    file_path = root_path + "chronicle4.pl"
     
     try:
         with open(file_path, 'r', encoding='utf-8') as f:

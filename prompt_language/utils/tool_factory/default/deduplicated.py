@@ -64,11 +64,26 @@ async def remove_similar_texts(texts: List[str], similarity_threshold: float = 0
     
     return result
 
-async def deduplicate(items:List[str]=[""]) -> List[str]:
+async def deduplicate(items: List[str]) -> List[str]:
     """主函数：处理字符串列表并去重"""
     result = []
     
     for item in items:
+        # 处理markdown代码块格式
+        if item.startswith('```') and item.endswith('```'):
+            # 提取代码块内容
+            content = item.split('\n', 1)[1].rsplit('\n', 1)[0]
+            # 如果是json格式，去掉json标记
+            if content.startswith('json'):
+                content = content[4:].strip()
+            try:
+                list_items = ast.literal_eval(content)
+                result.extend(list_items)
+                continue
+            except:
+                pass
+        
+        # 处理普通的字符串列表格式
         if item.startswith('[') and item.endswith(']'):
             try:
                 list_items = ast.literal_eval(item)
@@ -84,15 +99,14 @@ async def deduplicate(items:List[str]=[""]) -> List[str]:
     
     # 移除相似文本
     final_texts = await remove_similar_texts(cleaned_texts)
+    breakpoint()
     return final_texts
 
 if __name__ == "__main__":
     async def test():
         test_data = [
-            "这是一个测试。这是一个测试。今天天气不错。",
-            '["重复的内容。重复的内容。", "这是测试内容。这是测试内容。"]',
-            "今天的天气真的很不错，适合出门。今天天气不错，很适合出门。",
-            '["完全不同的内容。", "这是测试内容。这是测试内容。"]',
+            '```json\n[\n    "辛亥革命",\n    "清朝的结束",\n    "哥白尼革命"\n]\n```',
+            '["泰坦尼克号沉没事件"]',
             "这是独特的内容。"
         ]
         
