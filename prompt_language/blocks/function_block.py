@@ -1,3 +1,4 @@
+import ast, json
 from dataclasses import dataclass
 from typing import List, Dict, Any
 from .base_block import BaseBlock
@@ -15,16 +16,13 @@ class FunctionCall:
 class FunctionBlock(BaseBlock):
     async def execute(self, statement, gv_pool, tool_pool) -> None:
         logger.info(f"执行函数: {statement}")
-        
-        parser_res = await self.statement_parser.parse(statement, gv_pool)
+        parser_res = await self.statement_parser.parse(statement, gv_pool, retail_statement=True)
         assign_method, res_name, statement = parser_res.assign_method, parser_res.res_name, parser_res.statement
         
         function_call = await self._parse_function_call(statement)
         logger.debug(f"函数调用: {function_call}")
-        
         result = await self._execute_function(function_call, tool_pool)
-        logger.debug(f"函数返回: {result}")
-        
+        logger.debug(f"函数返回: {result}")        
         await self.save_result(res_name, result, assign_method, gv_pool)
         logger.info(f"变量赋值: {res_name} = {result}")
 
@@ -42,7 +40,7 @@ class FunctionBlock(BaseBlock):
             return result
         except Exception as e:
             raise ValueError(f"函数执行失败: {str(e)}")
-    
+        
     async def _parse_function_call(self, statement: str) -> FunctionCall:
         """
         解析函数调用语句
@@ -60,10 +58,11 @@ class FunctionBlock(BaseBlock):
             
             >>> _parse_function_call('@get_data("weather", query="Shanghai")')
             FunctionCall(name='get_data', args=['weather'], kwargs={'query': 'Shanghai'})
+
+        先解析位置参数和关键字参数，分好，然后再根据变量名去gv_pool中取值
         """
         # 去除前后空格
         content = statement.strip()
-        
         # 提取函数名（@后括号前的部分）
         if not content.startswith('@') or '(' not in content or not content.endswith(')'):
             raise ValueError(f"无效的函数调用语句: {content}")
@@ -74,7 +73,6 @@ class FunctionBlock(BaseBlock):
         
         # 提取参数字符串（括号内的部分）
         params_str = content[func_end + 1:-1].strip()
-        
         # 如果没有参数，直接返回
         if not params_str:
             return FunctionCall(name=func_name, args=[], kwargs={})
@@ -109,7 +107,7 @@ class FunctionBlock(BaseBlock):
         # 处理每个参数
         for param in params:
             param = param.strip()
-            if '=' in param:  # 关键字参数
+            if '=' in param[:15]:  # 关键字参数
                 key, value = param.split('=', 1)
                 key = key.strip()
                 value = value.strip()
@@ -117,13 +115,17 @@ class FunctionBlock(BaseBlock):
                 if (value.startswith('"') and value.endswith('"')) or \
                    (value.startswith("'") and value.endswith("'")):
                     value = value[1:-1]
-                kwargs[key] = value
+                if value.startswith('{') and value.endswith('}') or value.startswith('[') and value.endswith(']'):
+                    args.append(eval(value))  # 尝试使用 json.loads
+                else:
+                    kwargs[key] = value
             else:  # 位置参数
                 # 处理带引号的值
-                if (param.startswith('"') and param.endswith('"')) or \
-                   (param.startswith("'") and param.endswith("'")):
+                if (param.startswith('"') and param.endswith('"')) or (param.startswith("'") and param.endswith("'")):
                     param = param[1:-1]
-                args.append(param)
-        
+                if param.startswith('{') and param.endswith('}') or param.startswith('[') and param.endswith(']'):
+                    args.append(eval(param))
+                else:
+                    args.append(param)
+               
         return FunctionCall(name=func_name, args=args, kwargs=kwargs)
-

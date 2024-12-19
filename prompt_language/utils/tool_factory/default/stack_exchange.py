@@ -1,8 +1,8 @@
 from typing import Optional
 from dataclasses import dataclass
-from .base import BaseTool
 import logging
 from langchain_community.utilities import StackExchangeAPIWrapper
+from bs4 import BeautifulSoup
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ class StackExchangeResult:
     message: str
     content: Optional[str] = None
 
-class StackExchangeTool(BaseTool):
+class StackExchangeTool():
     """用于在Stack Exchange网站搜索的工具类"""
     
     def __init__(self):
@@ -74,6 +74,12 @@ async def stack_exchange_search(query: str) -> str:
     """
     tool = StackExchangeTool()
     result = tool.search(query)
-    return result.content if result.success else result.message
+    result_content = BeautifulSoup(result.content, "html.parser").get_text()
+    return result_content if result.success else result.message
 
+if __name__ == "__main__":
+    import asyncio
+    result = asyncio.run(stack_exchange_search("How to create a list in python"))
+    result_content = BeautifulSoup(result, "html.parser").get_text()
+    print(result_content)
 

@@ -59,7 +59,6 @@ async def paper_with_code_search(nums: int = 10):
                 html_content = await response.text()
                 tree = html.fromstring(html_content)
                 papers = []
-                breakpoint()
                 # 获取论文列表
                 for i in range(1, nums + 1):
                     try:

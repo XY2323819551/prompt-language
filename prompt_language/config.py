@@ -59,9 +59,14 @@ class GlobalVariablePool:
         
         current_value = self.variables.get(name)
         if current_value is None:
-            self.variables[name] = [value]
-        elif not isinstance(current_value, list):
+            if isinstance(value, str):
+                self.variables[name] = [value]
+            else:
+                self.variables[name] = value
+        elif not isinstance(current_value, list) and isinstance(value, str):
             self.variables[name] = [current_value, value]
+        elif isinstance(current_value, list) and isinstance(value, list):
+            current_value.extend(value)
         else:
             current_value.append(value)
     

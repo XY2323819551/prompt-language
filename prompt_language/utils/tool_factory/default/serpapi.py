@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from langchain_community.utilities import SerpAPIWrapper
-from .base import BaseTool
 from typing import Optional, Dict
 from dataclasses import dataclass
 import logging
@@ -17,7 +16,7 @@ class SearchResult:
     message: str
     content: Optional[str] = None
 
-class SearchTool(BaseTool):
+class SearchTool():
     """用于执行网络搜索的工具类"""
     
     def __init__(self, api_key: Optional[str] = None, params: Optional[Dict] = None):
@@ -67,9 +66,6 @@ async def serpapi_search(query: str) -> str:
     """
     使用SerpAPI执行网络搜索并返回结果。
 
-    这个函数使用SerpAPI执行Google搜索，并返回格式化的搜索结果。搜索结果
-    包含相关网页的摘要信息。
-
     Args:
         query (str): 搜索查询字符串，例如 "人工智能发展历史" 或 
             "Python编程教程"
@@ -92,4 +88,7 @@ async def serpapi_search(query: str) -> str:
     result = tool.search_web(query)
     return result.content if result.success else result.message
 
-
+if __name__ == "__main__":
+    import asyncio
+    result = asyncio.run(serpapi_search("什么是人工智能？"))
+    print(result)

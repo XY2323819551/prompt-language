@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import logging
 from langchain_community.utilities import OpenWeatherMapAPIWrapper
 from langchain_community.tools.openweathermap.tool import OpenWeatherMapQueryRun
-from .base import BaseTool
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class WeatherResult:
     message: str
     content: Optional[Dict] = None
 
-class WeatherTool(BaseTool):
+class WeatherTool():
     """用于获取天气信息的工具类"""
     
     def __init__(self):
@@ -138,4 +138,9 @@ async def get_weather(city: str) -> str:
     result = tool.get_weather(city)
     return result.content if result.success else result.message
 
+
+if __name__ == "__main__":
+    import asyncio
+    result = asyncio.run(get_weather("beijing"))
+    print(result)
 

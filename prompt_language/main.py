@@ -1,16 +1,7 @@
 import asyncio
 import os
 from prompt_language.executor import Executor
-from prompt_language.utils.tool_factory import (
-    search_arxiv,
-    get_arxiv_pdf_content,
-    serpapi_search,
-    get_weather,
-    wikipedia_search,
-    eat_food,
-    send_email,
-    code_execute
-)
+from prompt_language.utils.tool_factory import *
 from prompt_language.utils.prompt_logger import logger
 import logging
 
@@ -27,7 +18,13 @@ async def main():
         "search_web": serpapi_search,
         "get_weather": get_weather,
         "send_email": send_email,
-        "code_execute": code_execute
+        "code_execute": code_execute,
+        
+        "duckduckgo_search": duckduckgo_search,
+        "wikipedia_search": wikipedia_search,
+        "wikidata_search": wikidata_search,
+
+        "bing_search": bing_search
     }
     await executor.init_execute(variables, tools)
     
@@ -102,7 +99,8 @@ async def test_from_file():
         "send_email": send_email,
         "wikipedia_search": wikipedia_search,
         "eat_food": eat_food,
-        "code_execute": code_execute
+        "code_execute": code_execute,
+        "bing_search": bing_search
     }
     
     # 初始化变量
@@ -115,14 +113,19 @@ async def test_from_file():
     await executor.init_execute(variables, tools)
     
     # 读取测试文件
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/testcase.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/test_agent.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/bambo_agent_notebook.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_pua.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/prompt_agent_fighter.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/refine_agent.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/autodecision_agent.pl"
-    file_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/autodecision_agent_abs.pl"
+    # root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/demo_cases/"
+    # file_path = root_path + "testcase.pl"
+    # file_path = root_path + "test_agent.pl"
+    # file_path = root_path + "bambo_agent_notebook.pl"
+    # file_path = root_path + "prompt_agent_pua.pl"
+    # file_path = root_path + "prompt_agent_fighter.pl"
+    # file_path = root_path + "refine_agent.pl"
+    # file_path = root_path + "autodecision_agent.pl"
+    # file_path = root_path + "autodecision_agent_abs.pl"
+    
+    # 测试
+    root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/real_cases/"
+    file_path = root_path + "chronicle.pl"
     
     try:
         with open(file_path, 'r', encoding='utf-8') as f:

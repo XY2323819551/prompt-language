@@ -459,7 +459,7 @@ class StatementParser:
         self.variable_pattern = re.compile(r'\$[a-zA-Z_][a-zA-Z0-9_]*')
         self.complex_variable_pattern = re.compile(r'\${([^}]+)}')
     
-    async def parse(self, content: str, gv_pool: Any = None) -> Statement:
+    async def parse(self, content: str, gv_pool: Any = None, retail_statement: bool = False) -> Statement:
         """
         解析单条语句
         
@@ -491,7 +491,7 @@ class StatementParser:
             res_name = parts[1].strip()
         
         # 如果有变量池，处理变量引用
-        if gv_pool:
+        if gv_pool and not retail_statement:
             statement = await self._replace_variables(statement, gv_pool)
         
         return Statement(
@@ -531,7 +531,6 @@ class StatementParser:
                         var_obj = var_obj[part]
                     var_value = var_obj
             else:
-                breakpoint()
                 var_value = await gv_pool.get_variable(var_expr.strip('$'))
                 
             if var_value is not None:

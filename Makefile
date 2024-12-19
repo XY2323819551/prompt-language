@@ -15,6 +15,34 @@ count:
 	@echo "Python files count:" && find . -type f -name "*.py" | wc -l
 	@echo "Total lines in Python files:" && find . -type f -name "*.py" -exec cat {} \; | wc -l
 
-start_test:
+start:
 	@echo "Starting main program..."
-	python -m prompt_language.main
+	python -m prompt_language.main_chronicle
+
+
+
+
+
+test_duckduckgo:
+	@echo "Starting test_duckduckgo..."
+	python -m prompt_language.utils.tool_factory.websearch.duckduckgo
+test_wikipedia:
+	@echo "Starting test_wikipedia..."
+	python -m prompt_language.utils.tool_factory.websearch.wikipedia
+test_google:
+	@echo "Starting test_google..."
+	python -m prompt_language.utils.tool_factory.websearch.google
+test_bing:
+	@echo "Starting test_bing..."
+	python -m prompt_language.utils.tool_factory.websearch.bing
+test_save2local:
+	@echo "Starting test_save2local..."
+	python -m prompt_language.utils.tool_factory.default.save2local
+test_read_local:
+	@echo "Starting test_read_local..."
+	python -m prompt_language.utils.tool_factory.default.read_local
+test_deduplicated:
+	@echo "Starting test_deduplicated..."
+	python -m prompt_language.utils.tool_factory.default.deduplicated
+
+

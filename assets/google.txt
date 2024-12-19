@@ -1,0 +1,27 @@
+
+
+
+获取 Google API 密钥：
+
+1. 访问 Google Cloud Console: https://console.cloud.google.com/
+2. 创建新项目或选择现有项目
+3. 在左侧菜单中选择 "API和服务" -> "启用API和服务"
+4. 搜索并启用 "Custom Search API"
+5. 在左侧菜单中选择 "凭据"
+6. 点击 "创建凭据" -> "API密钥"
+7. 复制生成的API密钥
+8. (可选) 点击密钥进入设置，可以限制API密钥的使用范围
+
+
+
+获取 Custom Search Engine ID (CSE ID)
+
+1. 访问 Google Programmable Search Engine: https://programmablesearchengine.google.com/
+2. 点击 "创建搜索引擎"
+3. 在 "要搜索的网站" 中输入: scholar.google.com
+4. 名称随意填写
+5. 点击 "创建"
+6. 在搜索引擎设置中：
+   - 打开 "搜索整个网络" 选项
+   - 在 "网站限制" 中确保有 scholar.google.com
+7. 复制搜索引擎ID (cx值)

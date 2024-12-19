@@ -26,7 +26,7 @@ class LLMBlock(BaseBlock):
         messages = [{"role": "system", "content": statement}]
         
         response = await get_model_response(
-            model_name="gpt-4o-mini",
+            model_name="deepseek-chat",
             messages=messages,
             tools=tool_schemas if tool_schemas else None,
             temperature=0

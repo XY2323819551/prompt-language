@@ -3,7 +3,7 @@
 {
     "source": "中文",
     "target": "英文",
-    "source_text": "昨夜雨疏风骤，浓睡不消残酒"
+    "source_text": "1984年发生过哪些历史事件"
 }
 ```) -> data
 
