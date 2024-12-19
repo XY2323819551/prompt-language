@@ -76,8 +76,6 @@ async def _fetch_full_content(url: str) -> str:
     """获取网页全文内容"""
     if not isinstance(url, str) or not url:
         return ""
-    url = "https://zh.wikipedia.org/wiki/尼古拉·哥白尼"
-    
     try:
         # 解析并重新构建URL，确保格式正确
         parsed = urllib.parse.urlparse(url)
@@ -144,7 +142,7 @@ if __name__ == "__main__":
     # 测试带全文的搜索
     async def test_full_content():
         print("\n=== 带全文的搜索测试 ===")
-        full_results = await duckduckgo_search("哥白尼")  # 只请求一条结果
+        full_results = await duckduckgo_search("刘亦菲")  # 只请求一条结果
         for idx, result in enumerate(full_results, 1):
             print(f"\n--- 结果 {idx} ---")
             print(result)
