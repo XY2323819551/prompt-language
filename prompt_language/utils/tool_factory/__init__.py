@@ -7,6 +7,8 @@ from .default.save2local import save2local
 from .default.read_local import read_local
 
 from .custom.send_email import send_email
+from .custom.arxiv_search import arxiv_search
+from .custom.paper_with_code import paper_with_code_search
 
 from .websearch.bing import bing_search
 from .websearch.duckduckgo import duckduckgo_search
@@ -19,6 +21,9 @@ __all__ = [
     'deduplicate',
     'save2local',
     'read_local',
+
+    'arxiv_search',
+    'paper_with_code_search',
 
     'wikipedia_search',
     'duckduckgo_search',

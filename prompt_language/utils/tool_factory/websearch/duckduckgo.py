@@ -23,7 +23,7 @@ HEADERS = {
     'Upgrade-Insecure-Requests': '1'
 }
 
-def _duckduckgo_search(query: str, max_results: int = 1) -> List[Dict]:
+def _duckduckgo_search(query: str, max_results: int = 2) -> List[Dict]:
     """文本搜索"""
     with DDGS(proxies=PROXIES, headers=HEADERS) as ddgs:
         # 添加随机延迟

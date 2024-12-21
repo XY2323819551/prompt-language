@@ -3,7 +3,7 @@ import json
 from lxml import html
 import asyncio
 
-async def get_paper_detail(session, base_url, paper_url):
+async def get_paper_detail(session, paper_url):
     """获取论文详细信息"""
     try:
         async with session.get(paper_url) as response:
@@ -59,21 +59,16 @@ async def paper_with_code_search(nums: int = 10):
                 html_content = await response.text()
                 tree = html.fromstring(html_content)
                 papers = []
-                # 获取论文列表
                 for i in range(1, nums + 1):
                     try:
-                        # 获取标题和链接
                         title_xpath = f'/html/body/div[3]/div[2]/div[{i}]/div[2]/div/div[1]/h1/a'
                         title_elem = tree.xpath(title_xpath)
-                        
                         if not title_elem:
                             continue
                             
                         title = title_elem[0].text.strip()
                         paper_url = base_url + title_elem[0].get('href')
-                        
-                        # 获取详细信息
-                        detail_info = await get_paper_detail(session, base_url, paper_url)
+                        detail_info = await get_paper_detail(session, paper_url)
                         
                         if detail_info:
                             papers.append({
@@ -83,16 +78,27 @@ async def paper_with_code_search(nums: int = 10):
                                 'published_date': detail_info['published_date'],
                                 'stars': detail_info['stars']
                             })
-                            
                     except Exception as e:
                         print(f"处理第{i}篇论文时出错: {str(e)}")
                         continue
-                
                 return papers
                 
     except Exception as e:
         raise Exception(f"获取Papers with Code论文失败: {str(e)}")
 
-if __name__ == '__main__':
-    results = asyncio.run(paper_with_code_search(nums=3))
-    print(json.dumps(results, ensure_ascii=False, indent=2))
+if __name__ == "__main__":
+    async def test():
+        # 获取最新的3篇论文
+        papers = await paper_with_code_search(nums=3)
+        
+        # 打印结果
+        for idx, paper in enumerate(papers, 1):
+            print(f"\n=== 论文 {idx} ===")
+            print(f"标题: {paper['title']}")
+            print(f"链接: {paper['url']}")
+            print(f"发布日期: {paper['published_date']}")
+            print(f"Star数: {paper['stars']}")
+            print(f"摘要: {paper['abstract'][:200]}...")  # 只打印前200个字符
+            print("-" * 50)
+    
+    asyncio.run(test())

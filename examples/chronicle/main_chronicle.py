@@ -1,5 +1,11 @@
 import asyncio
 import os
+import sys
+
+# 将项目根目录添加到Python路径
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(root_dir)
+
 from prompt_language.executor import Executor
 from prompt_language.utils.tool_factory import *
 from prompt_language.utils.prompt_logger import logger
@@ -35,18 +41,18 @@ async def test_from_file():
     
     await executor.init_execute(variables, tools)
     # 测试
-    root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/real_cases/"
-    file_path = root_path + "chronicle4.pl"
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            prompt = f.read()
-        await executor.execute(prompt)
-        
-    except FileNotFoundError:
-        print(f"错误: 找不到文件 {file_path}")
-    except Exception as e:
-        print(f"执行出错: {str(e)}")
+    root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/chronicle"
+    for i in range(0, 5):
+        file_path = os.path.join(root_path, f"chronicle{i}.pl")
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                prompt = f.read()
+            await executor.execute(prompt)
+            
+        except FileNotFoundError:
+            print(f"错误: 找不到文件 {file_path}")
+        except Exception as e:
+            print(f"执行出错: {str(e)}")
 
 
 if __name__ == "__main__":

@@ -99,7 +99,6 @@ async def deduplicate(items: List[str]) -> List[str]:
     
     # 移除相似文本
     final_texts = await remove_similar_texts(cleaned_texts)
-    breakpoint()
     return final_texts
 
 if __name__ == "__main__":

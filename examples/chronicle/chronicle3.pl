@@ -13,5 +13,6 @@ FOR $item in $event_names_content:
     }' >> result
 END
 
+
 @save2local(content=$result, filename="books/event_names_summary.json") -> status
 

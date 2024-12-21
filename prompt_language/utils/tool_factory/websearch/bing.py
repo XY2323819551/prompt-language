@@ -36,7 +36,7 @@ async def _fetch_full_content(session: aiohttp.ClientSession, url: str) -> str:
     except:
         return ""
 
-async def _raw_bing_search(query: str, limit: int = 1) -> Dict[str, Any]:
+async def _raw_bing_search(query: str, limit: int = 2) -> Dict[str, Any]:
     """内部函数：调用Bing API进行搜索"""
     subscription_key = os.getenv("BING_SUBSCRIPTION_KEY")
     custom_config_id = os.getenv("BING_CUSTOM_CONFIG_ID")

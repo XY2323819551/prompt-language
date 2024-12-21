@@ -44,5 +44,27 @@ test_read_local:
 test_deduplicated:
 	@echo "Starting test_deduplicated..."
 	python -m prompt_language.utils.tool_factory.default.deduplicated
+test_arxiv_search:
+	@echo "Starting test_arxiv_search..."
+	python -m prompt_language.utils.tool_factory.custom.arxiv_search
+test_paper_with_code:
+	@echo "Starting test_paper_with_code..."
+	python -m prompt_language.utils.tool_factory.custom.paper_with_code
 
 
+
+test_chronicle:
+	@echo "Starting test_chronicle..."
+	python -m examples.chronicle.main_chronicle
+test_scific:
+	@echo "Starting test_scific..."
+	python -m examples.scific_read.main_scific
+test_paper:
+	@echo "Starting test_paper..."
+	python -m examples.paper.main_paper
+
+
+
+test_function_block:
+	@echo "Starting test_function_block..."
+	python -m prompt_language.blocks.function_block

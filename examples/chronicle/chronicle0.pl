@@ -1,9 +1,8 @@
 @code(```python
 def get_query():
-    return "1912年中国、法国、英国、美国都发生过哪些历史事件"
+    return "18世纪中、法、美的科技发明创造"
 query = get_query()
 ```) -> query
-
 
 @duckduckgo_search($query) >> search_result
 @bing_search($query) >> search_result

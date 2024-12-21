@@ -71,7 +71,7 @@ if __name__ == "__main__":
     import asyncio
     
     async def test():
-        result = await wikipedia_search("艾伦图灵")
+        result = await wikipedia_search("openai")
         print(result)
     
     asyncio.run(test())

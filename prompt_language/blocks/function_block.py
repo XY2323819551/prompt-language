@@ -42,65 +42,64 @@ class FunctionBlock(BaseBlock):
             raise ValueError(f"函数执行失败: {str(e)}")
         
     async def _get_variable_value(self, var_expr: str, gv_pool: Any) -> Any:
-        """
-        从变量池中获取变量值
-        支持普通变量、列表索引和字典键值的获取
-        """
-        # 移除$符号
-        if var_expr.startswith('$'):
-            var_expr = var_expr[1:]
+        """从变量池中获取变量值"""
+        if not isinstance(var_expr, str):
+            return var_expr
         
-        # 处理复杂表达式 ${var.key} 或 ${var[index]}
-        if var_expr.startswith('{') and var_expr.endswith('}'):
-            var_expr = var_expr[1:-1]
+        result = var_expr
+        pos = 0
+        
+        while True:
+            # 1. 找到下一个$
+            dollar_pos = result.find('$', pos)
+            if dollar_pos == -1:
+                break
             
-            # 分离基础变量名和访问表达式
-            parts = var_expr.split('.')
-            base_var = parts[0]
+            # 2. 确定变量范围
+            if result[dollar_pos:].startswith('${'):
+                end = result.find('}', dollar_pos)
+                if end == -1:
+                    pos = dollar_pos + 2
+                    continue
+                var_name = result[dollar_pos+2:end]  # 去掉${}
+                full_var = result[dollar_pos:end+1]
+            else:
+                end = dollar_pos + 1
+                while end < len(result) and (result[end].isalnum() or result[end] == '_'):
+                    end += 1
+                var_name = result[dollar_pos+1:end]  # 去掉$
+                full_var = result[dollar_pos:end]
             
-            # 获取基础变量值
+            # 3. 获取基础变量
+            base_var = var_name.split('.')[0].split('[')[0]
             value = await gv_pool.get_variable(base_var)
-            if value is None:
-                return var_expr
             
-            # 处理后续的键值和索引访问
-            for part in parts[1:]:
-                # 检查是否包含列表索引
-                if '[' in part and ']' in part:
-                    key = part[:part.find('[')]
-                    index_str = part[part.find('[')+1:part.find(']')]
-                    try:
-                        index = int(index_str)
-                        value = value[key][index] if key else value[index]
-                    except:
-                        return var_expr
-                else:
-                    # 普通字典键值访问
-                    try:
+            if value is None:
+                pos = end
+                continue
+            
+            # 4. 处理后续访问
+            if '.' in var_name:
+                try:
+                    for part in var_name.split('.')[1:]:
                         value = value[part]
-                    except:
-                        return var_expr
-                    
-            return value
+                except:
+                    pos = end
+                    continue
+                
+            if '[' in var_name:
+                try:
+                    index = int(var_name[var_name.find('[')+1:var_name.find(']')])
+                    value = value[index]
+                except:
+                    pos = end
+                    continue
+                
+            # 5. 替换变量
+            result = result[:dollar_pos] + str(value) + result[end+1:]
+            pos = dollar_pos + len(str(value))
         
-        # 处理简单的列表索引 ${var[0]}
-        if '[' in var_expr and ']' in var_expr:
-            base_var = var_expr[:var_expr.find('[')]
-            index_str = var_expr[var_expr.find('[')+1:var_expr.find(']')]
-            
-            value = await gv_pool.get_variable(base_var)
-            if value is None:
-                return var_expr
-            
-            try:
-                index = int(index_str)
-                return value[index]
-            except:
-                return var_expr
-        
-        # 普通变量
-        value = await gv_pool.get_variable(var_expr)
-        return value if value is not None else var_expr
+        return result
 
     async def _parse_function_call(self, statement: str, gv_pool: Any) -> FunctionCall:
         """
@@ -171,7 +170,7 @@ class FunctionBlock(BaseBlock):
                     
                 pos_args.append(param)
 
-        # 处理位置参数中的变量引用
+        # 处理位置参数的变量引用
         processed_args = []
         for arg in pos_args:
             if isinstance(arg, str) and ('$' in arg):
@@ -189,4 +188,56 @@ class FunctionBlock(BaseBlock):
             else:
                 processed_kwargs[key] = value
         return FunctionCall(name=func_name, pos_args=processed_args, kwargs=processed_kwargs)
+
+
+if __name__ == "__main__":
+    import asyncio
+    from dataclasses import dataclass
+    
+    @dataclass
+    class MockGlobalVariablePool:
+        def __init__(self):
+            self.variables = {
+                "paper_summary": ["摘要1", "摘要2", "摘要3"],
+                "paper": {
+                    "title": "测试论文",
+                    "abstract": "这是摘要",
+                    "authors": ["作者1", "作者2"],
+                    "date": "2024-03-20"
+                },
+                "results": {
+                    "data": {"title": "标题1", "content": "内容1"}
+                }
+            }
+        
+        async def get_variable(self, name: str):
+            return self.variables.get(name)
+    
+    async def test_variable_value():
+        gv_pool = MockGlobalVariablePool()
+        block = FunctionBlock()
+        
+        test_cases = [
+            # 列表索引访问
+            "${paper_summary[-1]}",  # 应返回 "摘要3"
+            "${paper_summary[0]}",   # 应返回 "摘要1"
+            
+            # 字典键值访问
+            "${paper.title}",        # 应返回 "测试论文"
+            "${paper.abstract}",     # 应返回 "这是摘要"
+            
+            # 字符串拼接
+            "papers/${paper.title}.md",  # 应返回 "papers/测试论文.md"
+            "output/${results.data.title}/data",  # 应返回 "output/标题1/data"
+            
+            # 多变量替换
+            "${paper.title}_${paper.date}"  # 应返回 "测试论文_2024-03-20"
+        ]
+        
+        for case in test_cases:
+            result = await block._get_variable_value(case, gv_pool)
+            print(f"\n测试用例: {case}")
+            print(f"返回结果: {result}")
+    
+    asyncio.run(test_variable_value())
 
