@@ -113,7 +113,7 @@ async def test_from_file():
     await executor.init_execute(variables, tools)
     
     # 读取测试文件
-    # root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/demo_cases/"
+    root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/demo_cases/"
     # file_path = root_path + "testcase.pl"
     # file_path = root_path + "test_agent.pl"
     # file_path = root_path + "bambo_agent_notebook.pl"
@@ -122,10 +122,6 @@ async def test_from_file():
     # file_path = root_path + "refine_agent.pl"
     # file_path = root_path + "autodecision_agent.pl"
     # file_path = root_path + "autodecision_agent_abs.pl"
-    
-    # 测试
-    root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/real_cases/"
-    file_path = root_path + "chronicle.pl"
     
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
