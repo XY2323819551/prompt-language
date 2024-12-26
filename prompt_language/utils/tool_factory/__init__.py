@@ -1,5 +1,7 @@
 
 from .default.stack_exchange import stack_exchange_search
+from .default.compute_calendar import compute_calendar
+
 from .default.weather import get_weather
 from .default.serpapi import serpapi_search
 from .default.deduplicated import deduplicate
@@ -21,6 +23,8 @@ __all__ = [
     'deduplicate',
     'save2local',
     'read_local',
+    'stack_exchange_search',
+    'compute_calendar',
 
     'arxiv_search',
     'paper_with_code_search',
