@@ -68,3 +68,11 @@ test_paper:
 test_function_block:
 	@echo "Starting test_function_block..."
 	python -m prompt_language.blocks.function_block
+
+
+test_g1:
+	@echo "Starting test_g1..."
+	python -m prompt_language.utils.agent_factory.g1
+test_meta_prompt:
+	@echo "Starting test_meta_prompt..."
+	python -m docs.openai-cookbook.meta-prompt

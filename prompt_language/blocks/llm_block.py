@@ -24,7 +24,7 @@ class LLMBlock(BaseBlock):
         tools_list = await tool_pool.get_all_tools()
         tool_schemas = [function_to_schema(tool) for tool in tools_list]
         messages = [{"role": "system", "content": statement}]
-        
+
         response = await get_model_response(
             model_name="deepseek-chat",  # gpt-4o、deepseek-chat
             messages=messages,
