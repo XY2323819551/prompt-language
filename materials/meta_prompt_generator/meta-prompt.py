@@ -53,7 +53,7 @@ The final prompt you output should adhere to the following structure below. Do n
 def generate_prompt(task_or_prompt: str, model_name = "deepseek-chat") -> str:
     client = OpenAI(
         base_url="https://api.deepseek.com", 
-        api_key="sk-9efddec830e34a1d915ebb4af09d26fb"
+        api_key="sk-9efddec830exxx"
     )
 
     completion = client.chat.completions.create(

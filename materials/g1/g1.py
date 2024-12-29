@@ -4,12 +4,12 @@ import json
 from openai import OpenAI
 
 # client = groq.Groq(
-#     api_key="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"
+#     api_key="gsk_n3kj3xID49YktwiLxxx"
 # )
 
 client = OpenAI(
     base_url="https://api.deepseek.com", 
-    api_key="sk-9efddec830e34a1d915ebb4af09d26fb"
+    api_key="sk-9efddec830e3xxx"
 )
 
 
