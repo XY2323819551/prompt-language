@@ -99,10 +99,5 @@ if __name__ == "__main__":
         # print("\n=== Gemini Thinking multi-turn chat ===")
         # response2 = await multi_turn_chat()
 
-
-
     asyncio.run(test())
-
-
-
 

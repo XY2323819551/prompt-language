@@ -103,3 +103,9 @@ test_conclusion_gemini:
 	@echo "Starting test_conclusion_gemini..."
 	python -m examples.conclusion_gemini.gemini_conclusion
 
+
+# tmp
+test_utils:
+	@echo "Starting test_utils..."
+	python -m examples.conclusion_gemini.utils
+
