@@ -61,9 +61,13 @@ if __name__ == "__main__":
             "2024-04-31",  # 无效日期
             "invalid"      # 错误格式
         ]
+
+        test_dates = [
+            "2025-02-03"
+        ]
         
         for date in test_dates:
-            print(f"\n测试日期: {date}")
+            print(f"\n=========={date}==========\n")
             result = await compute_calendar(date)
             if result["success"]:
                 print(f"公历: {result['gregorian_date']}")

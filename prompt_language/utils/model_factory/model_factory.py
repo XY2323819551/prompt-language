@@ -93,18 +93,18 @@ class ConfigManager:
     
     def __init__(self):
         # 获取项目根目录
-        self.root_dir = Path(__file__).resolve().parent.parent.parent
+        self.root_dir = Path(__file__).resolve().parent.parent.parent.parent
         self.env_path = self.root_dir / '.env'
         
         # 加载环境变量
         load_dotenv(dotenv_path=self.env_path)
-        
         # 初始化API配置
         self.api_configs = {
             ModelProvider.DEEPSEEK: APIConfig(
                 base_url="https://api.deepseek.com",
                 api_key=os.getenv("DEEPSEEK_API_KEY")
             ),
+            
             ModelProvider.OPENAI: APIConfig(
                 base_url="https://api.openai.com/v1",
                 api_key=os.getenv("OPENAI_API_KEY")
@@ -126,6 +126,7 @@ class ConfigManager:
         return self.api_configs[provider]
 
 
+# 根据model_name，获取对应的provider，然后根据provider获取对应的client
 class LLMClientFactory:
     """LLM客户端工厂"""
     
@@ -155,7 +156,7 @@ class LLMClientFactory:
         config = self.config_manager.get_api_config(provider)
         return self._create_client(provider, config, is_async)
 
-
+# 处理is_json、tools、stop、stream等参数
 class LLMResponse:
     """LLM响应处理类"""
     
@@ -193,6 +194,8 @@ class LLMResponse:
 # 导出便捷函数
 client_factory = LLMClientFactory()
 
+# 对外暴露的模型调用函数，统一了openai、groq、together的调用方式(deepseek直接使用openai的sdk规范)
+# 外部使用的时候直接传入model_name, messages即可
 async def get_model_response(
     model_name: str = "deepseek-chat",
     messages: List[Dict[str, str]] = [],

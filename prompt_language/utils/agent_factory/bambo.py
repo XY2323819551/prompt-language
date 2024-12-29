@@ -1,6 +1,6 @@
 import json
 import asyncio
-from prompt_language.utils.model_factory import get_model_response
+from prompt_language.utils.model_factory.model_factory import get_model_response
 from prompt_language.utils.func_to_schema import function_to_schema
 
 

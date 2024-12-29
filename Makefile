@@ -22,7 +22,7 @@ start:
 
 
 
-
+# 测试工具
 test_duckduckgo:
 	@echo "Starting test_duckduckgo..."
 	python -m prompt_language.utils.tool_factory.websearch.duckduckgo
@@ -50,9 +50,12 @@ test_arxiv_search:
 test_paper_with_code:
 	@echo "Starting test_paper_with_code..."
 	python -m prompt_language.utils.tool_factory.custom.paper_with_code
+test_compute_calendar:
+	@echo "Starting test_compute_calendar..."
+	python -m prompt_language.utils.tool_factory.default.compute_calendar
 
 
-
+# 测试工作流
 test_chronicle:
 	@echo "Starting test_chronicle..."
 	python -m examples.chronicle.main_chronicle
@@ -64,15 +67,39 @@ test_paper:
 	python -m examples.paper.main_paper
 
 
-
+# 测试逻辑块
 test_function_block:
 	@echo "Starting test_function_block..."
 	python -m prompt_language.blocks.function_block
 
 
+
+
+# 测试模型工厂的模型
+test_glm:
+	@echo "Starting test_glm_4..."
+	python -m prompt_language.utils.model_factory.glm_model
+test_gemini:
+	@echo "Starting test_gemini..."
+	python -m prompt_language.utils.model_factory.gemini_model
+
+
+
+# 其他测试
 test_g1:
 	@echo "Starting test_g1..."
 	python -m prompt_language.utils.agent_factory.g1
 test_meta_prompt:
 	@echo "Starting test_meta_prompt..."
 	python -m docs.openai-cookbook.meta-prompt
+test_meta_prompt_gemini:
+	@echo "Starting test_meta_prompt_gemini..."
+	python -m examples.conclusion_gemini.meta_prompt
+
+
+
+
+test_conclusion_gemini:
+	@echo "Starting test_conclusion_gemini..."
+	python -m examples.conclusion_gemini.gemini_conclusion
+

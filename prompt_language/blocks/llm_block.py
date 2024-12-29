@@ -1,7 +1,7 @@
 import json
 from .base_block import BaseBlock
 from prompt_language.utils.func_to_schema import function_to_schema
-from prompt_language.utils.model_factory import get_model_response
+from prompt_language.utils.model_factory.model_factory import get_model_response
 from prompt_language.utils.prompt_logger import logger
 
 

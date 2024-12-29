@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Union
 from .base_block import BaseBlock
-from prompt_language.utils.model_factory import get_model_response
+from prompt_language.utils.model_factory.model_factory import get_model_response
 from prompt_language.utils.prompt_logger import logger
 
 
