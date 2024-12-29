@@ -4,17 +4,11 @@ import base64
 from pathlib import Path
 from dotenv import load_dotenv
 import google.generativeai as genai
-import google.api_core.client_options as ClientOptions
 
 def init_gemini(model_name):
     root_dir = Path(__file__).resolve().parent.parent.parent
     env_path = root_dir / '.env'
     load_dotenv(dotenv_path=env_path)
-    
-    # 设置环境变量，为Gemini API添加代理
-    os.environ["HTTPS_PROXY"] = "http://127.0.0.1:7890"
-    os.environ["HTTP_PROXY"] = "http://127.0.0.1:7890"
-    
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
     return genai.GenerativeModel(model_name)
 
@@ -29,12 +23,18 @@ def read_local_pdf(file_path):
     return {'mime_type': 'application/pdf', 'data': doc_data}
 
 def summarize_pdf(model, pdf_data, prompt="Summarize this document, please: Answer in chinese."):
+    breakpoint()
     response = model.generate_content([pdf_data, prompt])
     return response.text
 
 if __name__ == "__main__":
-    model_name = "gemini-1.5-flash"  # 使用稳定版本
+    model_name = "gemini-2.0-flash-exp"
     model = init_gemini(model_name)
+    
+    # 在线PDF示例
+    # url = "https://arxiv.org/pdf/2107.07430"
+    # pdf_data = fetch_online_pdf(url)
+    # print(summarize_pdf(model, pdf_data))
     
     # 本地PDF示例
     file_path = "/Users/zhangxiaoyu/Downloads/test.pdf"

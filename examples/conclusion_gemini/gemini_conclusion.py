@@ -126,11 +126,14 @@ async def fetch_and_summarize(url, name="article", max_retries=3):
             print("3. 稍后重试")
 
 def main():
-    url = "https://openai.com/index/deliberative-alignment/"
-    name = "deliberative-alignment"
+    # url = "https://openai.com/index/deliberative-alignment/"
+    # name = "deliberative-alignment"
 
     # url = "https://mp.weixin.qq.com/s/Twljg_p6utB3cxyGuBiWUg"
     # name = "reft"
+
+    url = "https://www.anthropic.com/research/building-effective-agents"
+    name = "anthropic-agent-en"
 
     asyncio.run(fetch_and_summarize(url, name))
 
