@@ -6,6 +6,12 @@ import time
 import random
 import urllib.parse
 
+# 代理配置
+PROXIES = {
+    'http': 'http://127.0.0.1:7890',
+    'https': 'http://127.0.0.1:7890'
+}
+
 # 更完整的请求头
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -19,7 +25,7 @@ HEADERS = {
 
 def _duckduckgo_search(query: str, max_results: int = 2) -> List[Dict]:
     """文本搜索"""
-    with DDGS(headers=HEADERS) as ddgs:
+    with DDGS(proxies=PROXIES, headers=HEADERS) as ddgs:
         # 添加随机延迟
         time.sleep(random.uniform(2, 5))
         try:
@@ -38,7 +44,7 @@ def _duckduckgo_search(query: str, max_results: int = 2) -> List[Dict]:
 
 def search_news(query: str, max_results: int = 5) -> List[Dict]:
     """新闻搜索"""
-    with DDGS(headers=HEADERS) as ddgs:
+    with DDGS(proxies=PROXIES, headers=HEADERS) as ddgs:
         time.sleep(random.uniform(2, 5))
         try:
             results = ddgs.news(
@@ -53,7 +59,7 @@ def search_news(query: str, max_results: int = 5) -> List[Dict]:
 
 def search_images(query: str, max_results: int = 5) -> List[Dict]:
     """图片搜索"""
-    with DDGS(headers=HEADERS) as ddgs:
+    with DDGS(proxies=PROXIES, headers=HEADERS) as ddgs:
         time.sleep(random.uniform(2, 5))
         try:
             results = ddgs.images(
@@ -81,6 +87,7 @@ async def _fetch_full_content(url: str) -> str:
             async with session.get(
                 url,
                 headers=HEADERS,
+                proxy=PROXIES['http'],
                 ssl=False,
                 timeout=30
             ) as response:
