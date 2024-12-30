@@ -1,7 +1,13 @@
+
+import os
 import groq
 import time
 import json
 from openai import OpenAI
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
 
 # client = groq.Groq(
 #     api_key="gsk_n3kj3xID49YktwiLxxx"
@@ -9,7 +15,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.deepseek.com", 
-    api_key="sk-9efddec830e3xxx"
+    api_key=os.getenv("DEEPSEEK_API_KEY")
 )
 
 
