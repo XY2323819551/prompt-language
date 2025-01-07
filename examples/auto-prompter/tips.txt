@@ -1,0 +1,108 @@
+
+
+===================================伪代码==========================================
+initialization: acc=0, round=0
+
+step: 使用meta-prompt生成提示词
+while acc < 0.9 and round< 10:
+    step: 根据提示词跑benchmark
+    step: 输出benchmark结果(各种metrics，acc、流畅度、一致性等)，分析badcase，总结badcase的规律，总结优化提示词的方向
+    if metric1_acc > 0.9:
+        结束（输出中间过程，即每一个版本的prompt、metrics得分、错误分析、提示词优化方向）
+    else:
+        step: 根据上一步给出的提示词优化方向调整提示词prompt
+
+
+
+
+
+===================================prompt-language==========================================
+@code(```json
+{
+    "task": "问题改写，改写后的问题不能有不清楚的指代，要有完整的主谓宾，重写后的问题会被用于重新检索",
+    "model_name": "gemini",
+    "dataset": "expert_search"
+}
+```) -> vars
+
+
+@meta_prompt(query=${vars.task}) >> prompts
+FOR $item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+    @benchmark(prompt=${prompts[-1]}, dataset=${vars.dataset}, log_path="$item-iteration.log") >> acc_results
+    IF acc_results[-1] > 0.9:
+        @log2excelpic() -> status
+        @exit(msg="优化完成")
+    else:
+        @badcase_analyzer(log_path="$item-iteration.log") >> suggestions
+        @prompt_optimizer(ans=$suggestions) >> prompts
+    END
+END
+
+
+
+===================================tools细节==========================================
+5个工具
+- @meta_prompt(query=${vars.task}) >> prompts
+- @benchmark(prompt=${prompts[-1]}, dataset=${vars.dataset}, log_path="$item-iteration.log") >> acc_results
+- @badcase_analyzer(log_path="$item-iteration.log") >> suggestions
+- @prompt_optimizer(ans=$suggestions) >> prompts
+- @log2excelpic(prompts=$prompts、acc=$acc_results、suggestions=$suggestions) -> status
+
+----------
+工具1: @meta_prompt(query=${vars.task}) >> prompts
+----------
+- 目标：使用openai的meta-prompt生成提示词 / 使用anthropic的meta-prompt生成提示词（可以作一些微调）
+- 实现：
+    - input：最开始的task
+    - output：生成的prompt
+    
+
+
+----------
+工具2: @benchmark(prompt=${prompts[-1]}, dataset=${vars.dataset}, log_path="$item-iteration.log") >> acc_results
+----------
+- 目标：读取并测试benchmark，计算acc，并保存日志文件
+- 实现：
+    - input：prompt、dataset、log_path
+    - output：acc
+- 其他：
+    - 准备benchmark数据集，包括origin_query、prompt、ground_truth
+    - query重写的
+    - 专家搜索问答的
+
+
+
+
+----------
+工具3: @badcase_analyzer(log_path="$item-iteration.log") >> suggestions
+----------
+- 目标：逐条分析模型输出和正确答案之间的差异；总结badcase的规律；给出优化提示词的方向
+- 实现：
+    - input：log_path
+    - output：suggestions
+
+
+
+----------
+工具4: @prompt_optimizer(ans=$suggestions) >> prompts
+----------
+- 目标：根据指导手册和反馈优化提示词
+- 实现：
+    - input：suggestions & 历史信息(防止跷跷板现象) & 内置的知识手册
+    - output：prompts
+- 其他：
+    - 提前准备一份anthropic的优化提示词手册，在优化提示词的时候，当作指导手册送给llm，让llm根据指导手册和benchmark的分析共同生成提示词
+
+
+----------
+工具5: @log2excelpic(prompts=$prompts、acc=$acc_results、suggestions=$suggestions) -> status
+----------
+- 目标：将日志文件转换为excel表格，并生成图片
+- 实现：
+    - input：prompts、acc、suggestions
+    - output： Excel，列名是iteration1、2、3、...
+               Image, 横轴是iteration，纵轴是acc，每个iteration对应一个点，每个点有具体的acc数值
+
+
+
+
