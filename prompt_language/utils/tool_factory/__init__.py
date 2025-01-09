@@ -1,4 +1,3 @@
-
 from .default.stack_exchange import stack_exchange_search
 from .default.compute_calendar import compute_calendar
 
@@ -17,6 +16,13 @@ from .websearch.duckduckgo import duckduckgo_search
 from .websearch.google import google_search
 from .websearch.wikipedia import wikipedia_search
 
+
+from .auto_promptor.benchmark import benchmark
+from .auto_promptor.badcase_analyzer import analyze_badcase
+from .auto_promptor.prompt_optimizer import prompt_optimizer
+from .auto_promptor.log2excelpic import log2excelpic
+from .auto_promptor.meta_prompt import meta_prompt
+
 __all__ = [
     'get_weather',
     'send_email',
@@ -34,4 +40,11 @@ __all__ = [
     'bing_search',
     'google_search',
     'serpapi_search',
+    
+    # auto promptor tools
+    'benchmark',
+    'analyze_badcase',
+    'prompt_optimizer',
+    'log2excelpic',
+    'meta_prompt',
 ]

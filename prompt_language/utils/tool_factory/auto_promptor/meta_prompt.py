@@ -1,3 +1,4 @@
+
 from openai import OpenAI
 import os
 
@@ -47,10 +48,13 @@ The final prompt you output should adhere to the following structure below. Do n
 [optional: edge cases, details, and an area to call or repeat out specific important considerations]
 """.strip()
 
-def generate_prompt(task_or_prompt: str, model_name = "deepseek-chat") -> str:
+
+# 输入：task
+# 输出：prompt
+async def meta_prompt(task: str, model_name = "deepseek-chat") -> str:
     client = OpenAI(
         base_url="https://api.deepseek.com", 
-        api_key="sk-9efddec830exxx"
+        api_key="sk-9efddec830e34a1d915ebb4af09d26fb"
     )
 
     completion = client.chat.completions.create(
@@ -62,14 +66,15 @@ def generate_prompt(task_or_prompt: str, model_name = "deepseek-chat") -> str:
             },
             {
                 "role": "user",
-                "content": f"Task, Goal, or Current Prompt:\n{task_or_prompt}",
+                "content": f"Task, Goal, or Current Prompt:\n{task}",
             },
         ],
     )
     response = completion.choices[0].message.content
     return response
 
-if __name__ == "__main__":
+
+async def main():
     # 测试用例
     test_cases = [
         "写一个提示词，让AI帮我总结一篇论文",
@@ -113,7 +118,7 @@ if __name__ == "__main__":
         print(f"{'='*80}\n")
         
         try:
-            result = generate_prompt(test_prompt)
+            result = await meta_prompt(test_prompt)
             print(result)
             
             # 在测试用例之间添加分隔
@@ -125,4 +130,8 @@ if __name__ == "__main__":
             break
 
     
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())
+
 

@@ -95,13 +95,14 @@ class PromptLogger:
     def error(self, message: Any) -> None:
         """错误信息"""
         filename, block_type, line_no = self._get_caller_info()
-        formatted_msg = f"{BlockColor.ERROR}[ERROR] {block_type}:{filename}:{line_no} - {message}"
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        formatted_msg = f"{BlockColor.ERROR}[{now}] ERROR in {filename}:{line_no} - {message}"
+        
         # 添加堆栈跟踪信息
         if isinstance(message, Exception):
-            formatted_msg += f"\n\nTraceback (most recent call last):\n{traceback.format_exc()}{BlockColor.RESET}"
-            # self.logger.error(formatted_msg, exc_info=True)
+            error_trace = traceback.format_exc()
+            formatted_msg += f"\n\nFull traceback:\n{error_trace}{BlockColor.RESET}"
             self.logger.error(formatted_msg, exc_info=False)
-
         else:
             formatted_msg += BlockColor.RESET
             self.logger.error(formatted_msg)

@@ -69,6 +69,8 @@ class GlobalVariablePool:
             current_value.extend(value)
         else:
             current_value.append(value)
+        # print(current_value)
+        # breakpoint()
     
     async def variable_exists(self, name: str) -> bool:
         """检查变量是否存在"""

@@ -8,7 +8,7 @@ from prompt_language.utils.tool_factory.custom.fetch_openai_url import fetch_ope
 
 def is_openai_url(url):
     """判断是否是OpenAI的URL"""
-    return url.startswith('https://openai.com/') or url.startswith('http://openai.com/')
+    return "openai.com" in url
 
 def read_existing_content(file_path):
     """
@@ -81,6 +81,16 @@ async def fetch_and_summarize(url, name="article", max_retries=3):
         {content}
         """.format(content=text)
 
+
+
+        prompt = """
+        你是一个要点总结专家，擅长从参考内容中抓重点，总结重点。
+        输出markdown格式。
+
+        参考内容如下：
+        {content}
+        """.format(content=text)
+
         # 调用Gemini模型（带重试机制）
         print("正在调用Gemini模型生成摘要...")
         response = None
@@ -132,8 +142,12 @@ def main():
     # url = "https://mp.weixin.qq.com/s/Twljg_p6utB3cxyGuBiWUg"
     # name = "reft"
 
-    url = "https://www.anthropic.com/research/building-effective-agents"
-    name = "anthropic-agent-en"
+    # url = "https://www.anthropic.com/research/building-effective-agents"
+    # name = "anthropic-agent-en"
+
+    # url = "https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results"
+    url = "https://dye87dshnj.feishu.cn/wiki/ClV0wN3LOi2ekokfVf0cOdd0nDh"
+    name = "openai-prompt-engineering"
 
     asyncio.run(fetch_and_summarize(url, name))
 

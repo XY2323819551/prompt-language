@@ -366,9 +366,14 @@ class JudgmentParser:
                 for part in parts[1:]:
                     var_obj = var_obj[part]
                 var_value = var_obj
+            
+            elif '[' in var_expr and ']' in var_expr:
+                var_name = var_expr[:var_expr.find('[')]
+                index = int(var_expr[var_expr.find('[')+1:var_expr.find(']')])
+                var_obj = await gv_pool.get_variable(var_name.strip('$'))
+                var_value = var_obj[index] if var_obj else None
             else:
                 var_value = await gv_pool.get_variable(var_expr.strip('$'))
-                
             condition = condition.replace(f"${{{var_expr}}}", repr(var_value))
             
         # 替换简单变量引用

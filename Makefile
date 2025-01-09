@@ -67,6 +67,7 @@ test_paper:
 	python -m examples.paper.main_paper
 
 
+
 # 测试逻辑块
 test_function_block:
 	@echo "Starting test_function_block..."
@@ -97,14 +98,41 @@ test_meta_prompt_gemini:
 	python -m examples.conclusion_gemini.meta_prompt
 
 
-
-
 test_conclusion_gemini:
 	@echo "Starting test_conclusion_gemini..."
 	python -m examples.conclusion_gemini.gemini_conclusion
+
+
+
+
+
 
 # tmp
 test_orch:
 	@echo "Starting test_orch..."
 	python -m materials.orchestrator_workers
+
+
+
+
+
+
+# metaprompt dolphin language
+test_benchmark:
+	@echo "Starting test_benchmark..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.benchmark
+
+test_badcase_analyzer:
+	@echo "Starting test_badcase_analyzer..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.badcase_analyzer
+test_prompt_optimizer:
+	@echo "Starting test_prompt_optimizer..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.prompt_optimizer
+test_log2excelpic:
+	@echo "Starting test_log2excelpic..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.log2excelpic
+
+test_auto_prompter:
+	@echo "Starting test_auto_prompter..."
+	python -m examples.auto_prompter.promptor
 
