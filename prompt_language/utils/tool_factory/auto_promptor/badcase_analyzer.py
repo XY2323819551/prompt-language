@@ -2,7 +2,7 @@ import pandas as pd
 from openai import OpenAI
 
 client = OpenAI(
-    api_key="sk-9efddec830e34a1d915ebb4af09d26fb",
+    api_key="sk-9efddec830e34a1d915ebb4af09dxxxx",
     base_url="https://api.deepseek.com"
 )
 

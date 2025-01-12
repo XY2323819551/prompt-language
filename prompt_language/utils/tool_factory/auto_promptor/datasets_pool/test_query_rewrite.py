@@ -125,7 +125,7 @@ def ado_llm_ad(question, history_message, prompt_id):
 def call_deepseek(query, history_message, prompt_template="", evidences=[]):
     try:
         client = OpenAI(
-            api_key="sk-9efddec830e34a1d915ebb4af09d26fb",
+            api_key="sk-9efddec830e34a1d915ebb4af09dxxxx",
             base_url="https://api.deepseek.com"
         )
 

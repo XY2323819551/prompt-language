@@ -129,7 +129,7 @@ def cur_query_rewrite(query:str) -> str:
 def call_deepseek(query, content, prompt_template="", evidences=[]):
     try:
         client = OpenAI(
-            api_key="sk-9efddec830e34a1d915ebb4af09d26fb",
+            api_key="sk-9efddec830e34a1d915ebb4af09dxxxx",
             base_url="https://api.deepseek.com"
         )
         
