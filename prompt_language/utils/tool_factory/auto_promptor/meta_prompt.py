@@ -1,51 +1,39 @@
-
 from openai import OpenAI
 import os
 
 META_PROMPT = """
-Given a task description or existing prompt, produce a detailed system prompt to guide a language model in completing the task effectively.
+给定任务描述或现有提示词，生成一个详细的系统提示词，以有效指导语言模型完成任务。
 
-# Guidelines
+# 指导原则
+- 原始任务中有双括号包裹的变量占位符，请在提示词中使用这些变量占位符，不要删除它们。
+- 理解任务：掌握主要目标、目的、要求、约束条件和预期输出。
+- 最小化改动：如果提供了现有提示词，仅在简单的情况下改进它。对于复杂的提示词，在不改变原始结构的情况下增强清晰度并添加缺失的元素。
+- 推理先于结论：在得出任何结论之前鼓励推理步骤。注意！如果用户提供的示例中推理在结论之后，请颠倒顺序！切勿以结论开始示例！
+    - 推理顺序：指出提示词中的推理部分和结论部分（按具体字段名称）。对于每个部分，确定执行顺序，并判断是否需要颠倒。
+    - 结论、分类或结果应始终放在最后。
+- 清晰简洁：使用清晰、具体的语言。避免不必要的指令或空泛的陈述。
+- 格式化：使用markdown功能提高可读性。除非特别要求，否则不要使用```代码块。
+- 保留用户内容：如果输入任务或提示词包含大量指南或示例，完整保留它们，或尽可能接近原文。如果它们含糊不清，考虑分解成子步骤。保留用户提供的任何细节、指南、示例、变量或占位符。
+- 常量：在提示词中包含常量，因为它们不容易受到提示词注入的影响。比如指南、评分标准和示例。
+- 输出格式：详细说明最合适的输出格式。这应包括长度和语法（如简短句子、段落、JSON等）
+    - 对于输出明确定义或结构化数据（分类、JSON等）的任务，倾向于输出JSON。
+    - 除非明确要求，否则JSON不应该用代码块(```)包装。
 
-- Understand the Task: Grasp the main objective, goals, requirements, constraints, and expected output.
-- Minimal Changes: If an existing prompt is provided, improve it only if it's simple. For complex prompts, enhance clarity and add missing elements without altering the original structure.
-- Reasoning Before Conclusions: Encourage reasoning steps before any conclusions are reached. ATTENTION! If the user provides examples where the reasoning happens afterward, REVERSE the order! NEVER START EXAMPLES WITH CONCLUSIONS!
-    - Reasoning Order: Call out reasoning portions of the prompt and conclusion parts (specific fields by name). For each, determine the ORDER in which this is done, and whether it needs to be reversed.
-    - Conclusion, classifications, or results should ALWAYS appear last.
-- Examples: Include high-quality examples if helpful, using placeholders [in brackets] for complex elements.
-   - What kinds of examples may need to be included, how many, and whether they are complex enough to benefit from placeholders.
-- Clarity and Conciseness: Use clear, specific language. Avoid unnecessary instructions or bland statements.
-- Formatting: Use markdown features for readability. DO NOT USE ``` CODE BLOCKS UNLESS SPECIFICALLY REQUESTED.
-- Preserve User Content: If the input task or prompt includes extensive guidelines or examples, preserve them entirely, or as closely as possible. If they are vague, consider breaking down into sub-steps. Keep any details, guidelines, examples, variables, or placeholders provided by the user.
-- Constants: DO include constants in the prompt, as they are not susceptible to prompt injection. Such as guides, rubrics, and examples.
-- Output Format: Explicitly the most appropriate output format, in detail. This should include length and syntax (e.g. short sentence, paragraph, JSON, etc.)
-    - For tasks outputting well-defined or structured data (classification, JSON, etc.) bias toward outputting a JSON.
-    - JSON should never be wrapped in code blocks (```) unless explicitly requested.
+你输出的最终提示词应遵循以下结构。不要包含任何额外的评论，只输出完整的系统提示词。特别是不要在提示词的开始或结束处包含任何额外信息。（例如不要加"---"）
 
-The final prompt you output should adhere to the following structure below. Do not include any additional commentary, only output the completed system prompt. SPECIFICALLY, do not include any additional messages at the start or end of the prompt. (e.g. no "---")
+[简明描述任务的指令 - 这应该是提示词的第一行，无需章节标题]
 
-[Concise instruction describing the task - this should be the first line in the prompt, no section header]
+[根据需要添加额外细节]
 
-[Additional details as needed.]
+[可选的章节，带标题或要点列出详细步骤]
 
-[Optional sections with headings or bullet points for detailed steps.]
+# 步骤 [可选]
 
-# Steps [optional]
+[可选：完成任务所需步骤的详细分解]
 
-[optional: a detailed breakdown of the steps necessary to accomplish the task]
+# 输出格式
 
-# Output Format
-
-[Specifically call out how the output should be formatted, be it response length, structure e.g. JSON, markdown, etc]
-
-# Examples [optional]
-
-[Optional: 1-3 well-defined examples with placeholders if necessary. Clearly mark where examples start and end, and what the input and output are. User placeholders as necessary.]
-[If the examples are shorter than what a realistic example is expected to be, make a reference with () explaining how real examples should be longer / shorter / different. AND USE PLACEHOLDERS! ]
-
-# Notes [optional]
-
-[optional: edge cases, details, and an area to call or repeat out specific important considerations]
+[具体说明输出应如何格式化，无论是响应长度、结构（如JSON、markdown等）]
 """.strip()
 
 
@@ -54,7 +42,7 @@ The final prompt you output should adhere to the following structure below. Do n
 async def meta_prompt(task: str, model_name = "deepseek-chat") -> str:
     client = OpenAI(
         base_url="https://api.deepseek.com", 
-        api_key="sk-9efddec830e34a1d915ebb4af09dxxxx"
+        api_key="sk-9efddec830e34a1d915ebb4af09d26fb"
     )
 
     completion = client.chat.completions.create(
@@ -129,7 +117,7 @@ async def main():
             print(f"错误: {str(e)}")
             break
 
-    
+
 if __name__ == '__main__':
     import asyncio
     asyncio.run(main())

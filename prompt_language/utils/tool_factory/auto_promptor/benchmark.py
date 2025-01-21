@@ -1,20 +1,22 @@
-from .datasets_pool.test_query_rewrite import benchmark_query_rewrte
+from .datasets_pool.test_query_rewrite import benchmark_query_rewrite
 from .datasets_pool.test_user_search import benchmark_user_search
 
 USER_SEARCH_DATASETS = {
     "agent_res_0.8414",
     "agent_res_test",
     "user_search_test",
-    "user_search_test2"
+    "user_search_test2",
+    "user_search_test100"
 }
 
 QUERY_REWRITE_DATASETS = {
     "rewrite_50v1",
     "context_free_110",
-    "query_rewrite_test"
+    "query_rewrite_test",
+    "query_rewrite_test100"
 }
 
-async def benchmark(prompt_template: str, dataset_name: str, log_file_path: str = "output/benchmark_result.xlsx"):
+async def benchmark(prompt_template: str, dataset_name: str, metrics: list[str], log_file_path: str = "output/benchmark_result.xlsx"):
     """
     统一的benchmark入口
     
@@ -27,17 +29,21 @@ async def benchmark(prompt_template: str, dataset_name: str, log_file_path: str 
         float: 最终的准确率
     """
     if dataset_name in USER_SEARCH_DATASETS:
-        return benchmark_user_search(
+        final_acc, final_fluency_acc, final_consistency_acc =  benchmark_user_search(
             prompt_template=prompt_template,
             dataset_name=dataset_name,
+            metrics=metrics,
             log_file_path=log_file_path
         )
+        return final_acc, final_fluency_acc, final_consistency_acc
     elif dataset_name in QUERY_REWRITE_DATASETS:
-        return benchmark_query_rewrte(
+        final_acc, final_fluency_acc, final_consistency_acc =  benchmark_query_rewrite(
             prompt_template=prompt_template,
             dataset_name=dataset_name,
+            metrics=metrics,
             log_file_path=log_file_path
         )
+        return final_acc, final_fluency_acc, final_consistency_acc
     else:
         raise ValueError(f"Dataset {dataset_name} not found in any mapping")
 

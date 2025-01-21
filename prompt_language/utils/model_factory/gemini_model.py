@@ -1,4 +1,3 @@
-
 import os
 import asyncio
 from pathlib import Path
@@ -6,6 +5,10 @@ from google import genai
 from google.generativeai import types
 from dotenv import load_dotenv
 from IPython.display import Markdown
+import time
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+import requests
 
 
 
@@ -78,6 +81,42 @@ model_list = [
     'gemini-2.0-flash-thinking-exp-1219',
 
     ]
+
+class GeminiModel:
+    def __init__(self):
+        self.session = requests.Session()
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504],
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("https://", adapter)
+        self.session.mount("http://", adapter)
+
+    def generate_content(self, prompt):
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = self.session.post(
+                    "https://generativelanguage.googleapis.com/v1beta1/models/gemini-2.0-flash-exp:generateContent",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "prompt": {
+                            "text": prompt
+                        }
+                    }
+                )
+                response.raise_for_status()
+                return response.json()["result"]
+            except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as e:
+                if attempt == max_retries - 1:
+                    raise e
+                time.sleep(4 ** attempt)  # 指数退避
+                continue
 
 if __name__ == "__main__":
     async def test():

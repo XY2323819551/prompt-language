@@ -219,36 +219,50 @@ async def get_model_response(
     return response
 
 
+
+
+async def test_get_model_response():
+    response = await get_model_response(
+        model_name="gpt-4o",
+        messages=[{"role": "system", "content": "你是谁，一句话回答"}],
+        temperature=0
+    )
+    print(response)
+
 if __name__ == "__main__":
-    # 测试获取所有模型
-    all_models = ModelRegistry.get_all_models()
-    print("所有支持的模型:", all_models)
+    import asyncio
+    asyncio.run(test_get_model_response())
+    # # 测试获取所有模型
+    # all_models = ModelRegistry.get_all_models()
+    # print("所有支持的模型:", all_models)
+
+
+    # # 测试获取指定供应商的模型
+    # groq_models = ModelRegistry.get_provider_models(ModelProvider.GROQ)
+    # print("\nGroq支持的模型:", groq_models)
+    # breakpoint()
     
-    # 测试获取指定供应商的模型
-    groq_models = ModelRegistry.get_provider_models(ModelProvider.GROQ)
-    print("\nGroq支持的模型:", groq_models)
+    # # 测试批量注册新模型
+    # new_models = {
+    #     "claude-3-opus-20240229": ModelProvider.OPENAI,
+    #     "claude-3-sonnet-20240229": ModelProvider.OPENAI,
+    # }
+    # ModelRegistry.register_models(new_models)
+    # print("\n注册新模型后的OpenAI模型:", 
+    #     ModelRegistry.get_provider_models(ModelProvider.OPENAI))
     
-    # 测试批量注册新模型
-    new_models = {
-        "claude-3-opus-20240229": ModelProvider.OPENAI,
-        "claude-3-sonnet-20240229": ModelProvider.OPENAI,
-    }
-    ModelRegistry.register_models(new_models)
-    print("\n注册新模型后的OpenAI模型:", 
-        ModelRegistry.get_provider_models(ModelProvider.OPENAI))
+    # # 测试注册新的供应商
+    # new_provider = ModelRegistry.register_provider("Anthropic")
+    # ModelRegistry.register_models({
+    #     "claude-3": new_provider,
+    #     "claude-2": new_provider
+    # })
+    # print("\n新供应商Anthropic的模型:", 
+    #       ModelRegistry.get_provider_models(new_provider))
     
-    # 测试注册新的供应商
-    new_provider = ModelRegistry.register_provider("Anthropic")
-    ModelRegistry.register_models({
-        "claude-3": new_provider,
-        "claude-2": new_provider
-    })
-    print("\n新供应商Anthropic的模型:", 
-          ModelRegistry.get_provider_models(new_provider))
-    
-    # 验证错误处理
-    try:
-        ModelRegistry.register_models({"invalid-model": "InvalidProvider"})
-    except ValueError as e:
-        print("\n错误处理测试成功:", str(e))
+    # # 验证错误处理
+    # try:
+    #     ModelRegistry.register_models({"invalid-model": "InvalidProvider"})
+    # except ValueError as e:
+    #     print("\n错误处理测试成功:", str(e))
 

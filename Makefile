@@ -136,3 +136,15 @@ test_auto_prompter:
 	@echo "Starting test_auto_prompter..."
 	python -m examples.auto_prompter.promptor
 
+
+
+test_core_logic:
+	@echo "Starting test_core_logic..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.core_logic
+test_prompt_optimizer:
+	@echo "Starting test_prompt_optimizer..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.prompt_optimizer
+test_log2excelpic:
+	@echo "Starting test_log2excelpic..."
+	python -m prompt_language.utils.tool_factory.auto_promptor.log2excelpic
+	
