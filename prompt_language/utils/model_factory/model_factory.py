@@ -220,7 +220,6 @@ async def get_model_response(
 
 
 
-
 async def test_get_model_response():
     response = await get_model_response(
         model_name="gpt-4o",

@@ -108,16 +108,16 @@ test_conclusion_gemini:
 
 
 # tmp
-test_orch:
-	@echo "Starting test_orch..."
-	python -m materials.orchestrator_workers
+test_agent:
+	@echo "Starting test_agent..."
+	python -m examples.explore_demo_cases.agent
 
 
 
 
 
 
-# metaprompt dolphin language
+# test promptor project
 test_benchmark:
 	@echo "Starting test_benchmark..."
 	python -m prompt_language.utils.tool_factory.auto_promptor.benchmark
@@ -135,7 +135,6 @@ test_log2excelpic:
 test_auto_prompter:
 	@echo "Starting test_auto_prompter..."
 	python -m examples.auto_prompter.promptor
-
 
 
 test_core_logic:

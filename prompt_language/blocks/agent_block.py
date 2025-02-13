@@ -5,7 +5,8 @@ from prompt_language.utils.prompt_logger import logger
 from prompt_language.utils.agent_factory import (
     BamboAgent, 
     PromptBasedAgent, 
-    AutoDecisionAgent
+    AutoDecisionAgent,
+    ExploreAgent
 )
 import traceback
 
@@ -14,6 +15,7 @@ class AgentBlock(BaseBlock):
     # Agent类型映射
     AGENT_MAPPING = {
         "bambo": BamboAgent,
+        "explore": ExploreAgent,
         "prompt-based": PromptBasedAgent,
         "auto-decision": AutoDecisionAgent
     }
@@ -178,7 +180,7 @@ class AgentBlock(BaseBlock):
             logger.error(f"未知的Agent类型: {agent_type}")
             raise ValueError(f"未知的Agent类型: {agent_type}")
         try:
-            if agent_type == "bambo":
+            if agent_type == "bambo" or agent_type == "explore":
                 agent = agent_class(
                     roles=params.get("roles", {}),
                     tools=params.get("tools", []),

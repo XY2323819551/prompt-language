@@ -1,0 +1,10 @@
+
+1、构建复杂的数据集（smgk8/）、bird、其他的math\code\数据集等
+AIME, MATH-500, codeforces, LiveCodeBench, MathVista, MMMU    
+
+2、搓成一个项目来做，独立出来，先不使用prompt-language
+3、各个阶段的prompt都需要调整，需要有prompt的版本管理，需要将prompt单独放到某个文件中，方便管理
+4、few-shot的方式：（1）合成few-shot数据；（2）使用固定的few-shot数据进行训练；（3）对于每个问题，动态检索few-shot数据进行推理
+5、badcase_analysis：（1）所有的badcase一起分析，不要分开分析
+
+
