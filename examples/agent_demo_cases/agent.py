@@ -29,7 +29,9 @@ async def test_from_file():
         "wikipedia_search": wikipedia_search,
         "bing_search": bing_search,
         "google_search": google_search,
-        "duckduckgo_search": duckduckgo_search
+        "duckduckgo_search": duckduckgo_search,
+        "serpapi_search":serpapi_search,
+        "searchall":searchall
     }
     
     # 初始化变量
@@ -42,7 +44,7 @@ async def test_from_file():
     await executor.init_execute(variables, tools)
     # 测试
     root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/agent_demo_cases"
-    file_path = os.path.join(root_path, f"bambo_agent_notebook.pl")
+    file_path = os.path.join(root_path, f"autodecision_agent_abs.pl")  # autodecision_agent_abs.pl、bambo_agent_notebook.pl
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             prompt = f.read()

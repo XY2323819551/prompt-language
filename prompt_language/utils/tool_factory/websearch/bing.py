@@ -8,6 +8,17 @@ import asyncio
 # 加载.env文件中的环境变量
 load_dotenv()
 
+def _check_credentials():
+    """检查必要的环境变量是否设置"""
+    subscription_key = os.getenv("BING_SUBSCRIPTION_KEY")
+    custom_config_id = os.getenv("BING_CUSTOM_CONFIG_ID")
+    if not subscription_key:
+        raise ValueError("BING_SUBSCRIPTION_KEY 环境变量未设置。请在.env文件中设置此变量。")
+    if not custom_config_id:
+        raise ValueError("BING_CUSTOM_CONFIG_ID 环境变量未设置。请在.env文件中设置此变量。")
+    
+    return subscription_key, custom_config_id
+
 async def _fetch_full_content(session: aiohttp.ClientSession, url: str) -> str:
     """内部函数：获取网页完整内容"""
     try:
@@ -36,42 +47,49 @@ async def _fetch_full_content(session: aiohttp.ClientSession, url: str) -> str:
     except:
         return ""
 
-async def _raw_bing_search(query: str, limit: int = 2) -> Dict[str, Any]:
+async def _raw_bing_search(query: str, limit: int = 5) -> Dict[str, Any]:
     """内部函数：调用Bing API进行搜索"""
-    subscription_key = os.getenv("BING_SUBSCRIPTION_KEY")
-    custom_config_id = os.getenv("BING_CUSTOM_CONFIG_ID")
-    
-    base_url = "https://api.bing.microsoft.com/v7.0/custom/search"
-    
-    params = {
-        "q": query,
-        "customconfig": custom_config_id,
-        "count": limit
-    }
-    headers = {
-        "Ocp-Apim-Subscription-Key": subscription_key
-    }
-    
-    async with aiohttp.ClientSession() as session:
-        async with session.get(base_url, headers=headers, params=params) as response:
-            if response.status == 200:
-                data = await response.json()
-                results = []
-                
-                if "webPages" in data:
-                    for page in data["webPages"]["value"]:
-                        result = {
-                            "title": page.get("name", ""),
-                            "url": page.get("url", ""),
-                            "snippet": page.get("snippet", "")
-                        }
-                        # 获取完整正文
-                        full_text = await _fetch_full_content(session, result["url"])
-                        result["full_text"] = full_text
-                        results.append(result)
-                
-                return results
-            return []
+    try:
+        subscription_key, custom_config_id = _check_credentials()
+        
+        base_url = "https://api.bing.microsoft.com/v7.0/custom/search"
+        
+        params = {
+            "q": query,
+            "customconfig": custom_config_id,
+            "count": limit
+        }
+        headers = {
+            "Ocp-Apim-Subscription-Key": subscription_key
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.get(base_url, headers=headers, params=params) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    results = []
+                    
+                    if "webPages" in data:
+                        for page in data["webPages"]["value"]:
+                            result = {
+                                "title": page.get("name", ""),
+                                "url": page.get("url", ""),
+                                "snippet": page.get("snippet", "")
+                            }
+                            # 获取完整正文
+                            full_text = await _fetch_full_content(session, result["url"])
+                            result["full_text"] = full_text
+                            results.append(result)
+                    
+                    return results
+                else:
+                    error_text = await response.text()
+                    print(f"Bing搜索API错误: HTTP {response.status}")
+                    print(f"错误详情: {error_text}")
+                    return []
+    except Exception as e:
+        print(f"Bing搜索发生错误: {str(e)}")
+        return []
 
 async def bing_search(query: str) -> List[str]:
     """
@@ -101,7 +119,7 @@ async def bing_search(query: str) -> List[str]:
 
 # Test case
 async def test_bing():
-    query = "how to use bing search"
+    query = "哪吒2的票房啥情况了？"
     results = await bing_search(query)
     
     print(f"\n=== Bing搜索结果 ===")

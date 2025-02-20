@@ -35,6 +35,9 @@ test_google:
 test_bing:
 	@echo "Starting test_bing..."
 	python -m prompt_language.utils.tool_factory.websearch.bing
+test_websearch:
+	@echo "Starting test_websearch..."
+	python -m prompt_language.utils.tool_factory.websearch.websearch
 test_save2local:
 	@echo "Starting test_save2local..."
 	python -m prompt_language.utils.tool_factory.default.save2local
@@ -83,6 +86,13 @@ test_glm:
 test_gemini:
 	@echo "Starting test_gemini..."
 	python -m prompt_language.utils.model_factory.gemini_model
+test_r1:
+	@echo "Starting test_r1..."
+	python -m prompt_language.utils.model_factory.deepseek_r1
+test_r1_model:
+	@echo "Starting test_r1_model..."
+	python -m prompt_language.utils.tool_factory.default.r1_model
+	
 
 
 
@@ -101,19 +111,6 @@ test_meta_prompt_gemini:
 test_conclusion_gemini:
 	@echo "Starting test_conclusion_gemini..."
 	python -m examples.conclusion_gemini.gemini_conclusion
-
-
-
-
-
-
-# tmp
-test_agent:
-	@echo "Starting test_agent..."
-	python -m examples.explore_demo_cases.agent
-
-
-
 
 
 
@@ -147,3 +144,22 @@ test_log2excelpic:
 	@echo "Starting test_log2excelpic..."
 	python -m prompt_language.utils.tool_factory.auto_promptor.log2excelpic
 	
+
+
+# tmp
+test_agent:
+	@echo "Starting test_agent..."
+	python -m examples.explore_demo_cases.agent
+test_deepqa:
+	@echo "Starting test_deepqa..."
+	python -m examples.deepqa.main_deepqa
+test_bambo:
+	@echo "Starting test_bambo..."
+	python -m examples.agent_demo_cases.agent
+
+test_codetool:
+	@echo "Starting test_codetool..."
+	python -m prompt_language.utils.tool_factory.default.codetool
+
+
+

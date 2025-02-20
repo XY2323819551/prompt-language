@@ -226,6 +226,7 @@ async def test_get_model_response():
         messages=[{"role": "system", "content": "你是谁，一句话回答"}],
         temperature=0
     )
+    breakpoint()
     print(response)
 
 if __name__ == "__main__":

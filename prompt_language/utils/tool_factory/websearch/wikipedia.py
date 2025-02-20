@@ -22,7 +22,7 @@ async def wikipedia_search(query: str) -> str:
         "list": "search",
         "srsearch": query,
         "utf8": 1,
-        "srlimit": 1
+        "srlimit": 3
     }
     
     async with aiohttp.ClientSession() as session:

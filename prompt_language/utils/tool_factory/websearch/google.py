@@ -52,7 +52,7 @@ async def _fetch_full_content(url: str) -> str:
         print(f"Error fetching content: {str(e)}")
     return ""
 
-async def _google_search_async(query: str, num_results: int = 2) -> dict:
+async def _google_search_async(query: str, num_results: int = 3) -> dict:
     """异步方式调用Google搜索API"""
     url = f'https://www.googleapis.com/customsearch/v1'
     params = {

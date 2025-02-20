@@ -25,12 +25,15 @@ async def test_from_file():
         "deduplicate": deduplicate,
         "save2local": save2local,
         "read_local": read_local,
+        "code_tool":code_tool,
+        "r1_model":r1_model,
 
         "wikipedia_search": wikipedia_search,
         "bing_search": bing_search,
         "google_search": google_search,
         "duckduckgo_search": duckduckgo_search,
-        "serpapi_search": serpapi_search
+        "serpapi_search": serpapi_search,
+        "searchall": searchall
     }
     
     # 初始化变量
@@ -45,7 +48,7 @@ async def test_from_file():
     root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/explore_demo_cases"
     # file_path = os.path.join(root_path, f"agent_notebook.pl")
     # file_path = os.path.join(root_path, f"agent_paper.pl")
-    file_path = os.path.join(root_path, f"agent_abs.pl")
+    file_path = os.path.join(root_path, f"agent_abs1.pl")
     # file_path = os.path.join(root_path, f"agent_price.pl")
 
     try:

@@ -67,8 +67,7 @@ async def serpapi_search(query: str) -> str:
     使用SerpAPI执行网络搜索并返回结果。
 
     Args:
-        query (str): 搜索查询字符串，例如 "人工智能发展历史" 或 
-            "Python编程教程"
+        query (str): 搜索查询字符串，例如 "人工智能发展历史" 或 "Python编程教程"
 
     Returns:
         str: 搜索结果字符串。如果搜索成功，将包含相关网页的摘要信息；

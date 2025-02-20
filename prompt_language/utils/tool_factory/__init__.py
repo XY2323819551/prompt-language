@@ -6,6 +6,8 @@ from .default.serpapi import serpapi_search
 from .default.deduplicated import deduplicate
 from .default.save2local import save2local
 from .default.read_local import read_local
+from .default.code_tool import code_tool
+from .default.r1_model import r1_model
 
 from .custom.send_email import send_email
 from .custom.arxiv_search import arxiv_search
@@ -15,6 +17,7 @@ from .websearch.bing import bing_search
 from .websearch.duckduckgo import duckduckgo_search
 from .websearch.google import google_search
 from .websearch.wikipedia import wikipedia_search
+from .websearch.searchall import searchall
 
 
 from .auto_promptor.benchmark import benchmark
@@ -31,6 +34,7 @@ __all__ = [
     'read_local',
     'stack_exchange_search',
     'compute_calendar',
+    'r1_model',
 
     'arxiv_search',
     'paper_with_code_search',
@@ -40,6 +44,8 @@ __all__ = [
     'bing_search',
     'google_search',
     'serpapi_search',
+    'code_tool',
+    'searchall',
     
     # auto promptor tools
     'benchmark',
