@@ -1,7 +1,12 @@
 
+
+
+
+
+
+
+
 # promtp language rules V 0.1.0
-
-
 
 ## 0. 概述
 
@@ -41,7 +46,7 @@ prompt language的介绍将从以下几部分展开：
 
 - 大小写敏感
 - 需要明确的缩进，4个空格
-- 使用@符号调用各语句时，必须使用->或>>接收返回值，如果没有返回值则“->None”
+- 使用@符号调用各语句时，必须使用->或>>接收返回值，如果没有返回值则"->None"
 - 执行过程中产生的所有变量都会被存入全局变量池，作为agentic workflow的中间结果
 
 ## 1. 变量标识符
@@ -67,11 +72,11 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 - 标识符：自然语言指令 `->` 结果变量名；
 - examples：
 
-```Plain
-查一下上海的天气 -> climate
-根据${climate.status}写一首诗 -> poem
-把$poem发到我的邮箱 -> result
-```
+  ```
+  查一下上海的天气 -> climate
+  根据${climate.status}写一首诗 -> poem
+  把$poem发到我的邮箱 -> result
+  ```
 
 ### 3.2. 函数调用语句
 
@@ -79,10 +84,10 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 - 规范：目前1⃣️位置参数和2⃣️关键字参数（顺序要求：位置参数必须要在关键字参数之前）
 - examples：
 
-```Plain
-@serpapi_search($question) -> result
-@serpapi_search("后羿射日") -> result
-```
+  ```
+  @serpapi_search($question) -> result
+  @serpapi_search("后羿射日") -> result
+  ```
 
 ### 3.3 代码块调用语句
 
@@ -94,13 +99,13 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 
   代码块需要使用三个反引号包裹，符合markdown规范，示例如下：
 
-  ```python
+  ```
   @code(```python
       def add_one(a):
           return a+1
       python_res = add_one($a)
   ```) -> result
-  ```
+	```
 
 - **模式2：**注入外部json数据，可以充当数据mock，灵活引入任务数据
 
@@ -109,11 +114,11 @@ tips: 使用 `>>` 会自动将变量类型转换为list
   ```
   @code(```json
   {
-  		"status":"晴天",
-  		"humidity":"65%",
-  		"wind_speed":"5m/s"
+      "status":"晴天",
+      "humidity":"65%",
+      "wind_speed":"5m/s"
   }
-  ```)->weather_schema
+  ```) -> weather_schema
   ```
 
 - **模式3：**输入自然语言
@@ -130,14 +135,14 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 
 - examples：
 
-~~~Plain
-@code(```json
-{"question": "在上海擅长劳动法的律师有哪些呢？",
-"content": "上海擅长劳动法的律师有张律师、李律师。徐律师也擅长劳动法但是在北京。"}
-```) -> question
-
-@condition_judge(${question.question}, ["找律师", "找案件"]) -> condition_flag
-~~~
+  ```
+  @code(```json
+  {"question": "在上海擅长劳动法的律师有哪些呢？",
+  "content": "上海擅长劳动法的律师有张律师、李律师。徐律师也擅长劳动法但是在北京。"}
+  ```) -> question
+  
+  @condition_judge(${question.question}, ["找律师", "找案件"]) -> condition_flag
+  ```
 
 ### 3.5 exit退出语句
 
@@ -145,11 +150,9 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 
 - examples：
 
-```Plain
-@exit(msg="不玩啦，退出程序！")
-```
-
-  
+  ```
+  @exit(msg="不玩啦，退出程序！")
+  ```
 
 ## 4. 两种高级语句
 
@@ -159,11 +162,11 @@ tips: 使用 `>>` 会自动将变量类型转换为list
 - 规范：以大写的`FOR`开头，大写`END`结尾。必须有明确的缩进（4个空格）
 - examples：
 
-```Plain
+```
 FOR $item in $variable:
-    根据$item写一首诗->result
-    @func1_name(args1)->result1()
-    @func2_name(args2)->result2()
+    根据$item写一首诗 -> result
+    @func1_name(args1) -> result1
+    @func2_name(args2) -> result2
 END
 ```
 
@@ -175,24 +178,24 @@ END
 
 - examples：
 
-~~~Plain
-@code(```json
-{"question": "在上海擅长劳动法的律师有哪些呢？",
-"content": "上海擅长劳动法的律师有张律师、李律师。徐律师也擅长劳动法但是在北京。"}
-```) -> question
-
-@condition_judge(${question.question}, ["找律师", "找案件"]) -> condition_flag
-IF $condition_flag == "找律师":
-    请根据参考信息回答问题：
-    ${question.content}
-    问题：${question.question}
-
-    ## 限制
-    不许捏造不存在的信息 -> result
-else:
-    @serpapi_search($question) -> result
-END
-~~~
+  ```
+  @code(```json
+  {"question": "在上海擅长劳动法的律师有哪些呢？",
+  "content": "上海擅长劳动法的律师有张律师、李律师。徐律师也擅长劳动法但是在北京。"}
+  ```) -> question
+  
+  @condition_judge(${question.question}, ["找律师", "找案件"]) -> condition_flag
+  IF $condition_flag == "找律师":
+      请根据参考信息回答问题：
+      ${question.content}
+      问题：${question.question}
+  
+      ## 限制
+      不许捏造不存在的信息 -> result
+  else:
+      @serpapi_search($question) -> result
+  END
+  ```
 
 ## 5. agent语句
 
@@ -210,20 +213,16 @@ END
 - examples
 
   ```
-  @agent(type="auto-decision", task="查一下上海的天气，根据天气情况写一首诗，并将结果发送到我的邮箱", tools=[])-> weather_agent
+  @agent(type="auto-decision", task="查一下上海的天气，根据天气情况写一首诗，并将结果发送到我的邮箱", tools=[]) -> weather_agent
   ```
 
 - **Tips：**self-refine、self-reflection、self-critical、plan-and-execute都可以通过workflow配置出来。
-
-
-
-
 
 ## to do something
 
 ### (bp) debug功能
 
-```Plain
+```
 - 说明：
 - 1. 断点工具用于调试，只能写在5种基础语句块之间，在程序运行到指定位置时，程序会暂停运行，并返回当前步骤的output和所有变量的状态值；
 - 2. 继续执行时，需要附带所有的状态（因为prompt language是无状态的）
