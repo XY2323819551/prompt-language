@@ -15,6 +15,8 @@ async def get_client():
 query = "9.8和9.11谁大"
 messages=[{"role": "user", "content": query}]
 
+
+# aliyun
 async def get_model_response_r1(messages):
     is_answering = False   
 
@@ -49,12 +51,12 @@ async def get_model_response_r1(messages):
             # print(delta.content, end='', flush=True)
             yield delta.content
 
-
+# aliyun
 async def get_model_response_r1_static(messages):
     is_answering = False   
 
     client = await get_client()
-    time.sleep(30)
+    # time.sleep(30)
     stream = await client.chat.completions.create(
         model="deepseek-r1",  
         messages=messages,
@@ -83,6 +85,42 @@ async def get_model_response_r1_static(messages):
             print(delta.content, end='', flush=True)
             content += delta.content
     return content
+
+# aliyun
+# async def get_model_response_v3_static(messages):
+#     is_answering = False   
+
+#     client = await get_client()
+#     # time.sleep(30)
+#     stream = await client.chat.completions.create(
+#         model="deepseek-v3",  
+#         messages=messages,
+#         stream=True
+#     )
+
+#     print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
+#     content, reasoning_content = "", ""
+#     async for chunk in stream:
+#         delta = chunk.choices[0].delta
+
+#         if not hasattr(delta, 'reasoning_content'):
+#             continue
+#         if not getattr(delta, 'reasoning_content', None) and not getattr(delta, 'content', None):
+#             continue
+
+#         if not getattr(delta, 'reasoning_content', None) and not is_answering:
+#             print("\n" + "=" * 20 + "完整回复" + "=" * 20 + "\n")
+#             is_answering = True
+
+#         if getattr(delta, 'reasoning_content', None):
+#             print(delta.reasoning_content, end='', flush=True)
+#             reasoning_content += delta.reasoning_content
+            
+#         elif getattr(delta, 'content', None):
+#             print(delta.content, end='', flush=True)
+#             content += delta.content
+#     breakpoint()
+#     return content
 
 
 
@@ -125,6 +163,25 @@ async def get_model_response_v3(messages):
         # content = chunk.choices[0].delta.content if chunk.choices[0].delta.content else ""
         yield chunk
 
+# # siliconflow
+async def get_model_response_v3_static(messages):
+    client = OpenAI(
+        base_url='https://api.siliconflow.cn/v1',
+        api_key="sk-atyahnnvfgxogwfopseezxavxrvjqolunozksdlngdwlnzse"
+    )
+    response = client.chat.completions.create(
+        model="deepseek-ai/DeepSeek-V3",  # Qwen/Qwen2.5-7B-Instruct、deepseek-ai/DeepSeek-V3
+        messages=messages,
+        temperature=0.0,
+        stream=True  # 启用流式输出
+    )
+    all_content = ""
+    for chunk in response:
+        content = chunk.choices[0].delta.content if chunk.choices[0].delta.content else ""
+        print(content, end="", flush=True)
+        all_content += content
+    return all_content
+
 
 
 async def get_model_response_coder(messages):
@@ -156,8 +213,10 @@ async def main():
         }]
         
         # 修复：使用 async for 来迭代异步生成器
-        async for item in get_model_response_v3(messages):
-            print(item, end="", flush=True)
+        response = await get_model_response_v3_static(messages)
+        print(response)
+        # async for item in get_model_response_v3(messages):
+        #     print(item, end="", flush=True)
             
     except Exception as e:
         print(f"发生错误：{e}")

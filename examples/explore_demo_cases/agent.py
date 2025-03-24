@@ -33,7 +33,11 @@ async def test_from_file():
         "google_search": google_search,
         "duckduckgo_search": duckduckgo_search,
         "serpapi_search": serpapi_search,
-        "searchall": searchall
+        "searchall": searchall,
+
+        "ngql": ngql,
+        "kgrag": kgrag,
+        "query_rewrite": query_rewrite
     }
     
     # 初始化变量
@@ -48,8 +52,10 @@ async def test_from_file():
     root_path = "/Users/zhangxiaoyu/Desktop/WorkSpace/prompt-language/examples/explore_demo_cases"
     # file_path = os.path.join(root_path, f"agent_notebook.pl")
     # file_path = os.path.join(root_path, f"agent_paper.pl")
-    file_path = os.path.join(root_path, f"agent_abs1.pl")
+    # file_path = os.path.join(root_path, f"agent_abs1.pl")
     # file_path = os.path.join(root_path, f"agent_price.pl")
+    file_path = os.path.join(root_path, f"agent_kbqa.pl")
+
 
     try:
         with open(file_path, 'r', encoding='utf-8') as f:

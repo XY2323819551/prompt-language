@@ -162,4 +162,9 @@ test_codetool:
 	python -m prompt_language.utils.tool_factory.default.codetool
 
 
-
+test_query_rewrite:
+	@echo "Starting test_query_rewrite..."
+	python -m prompt_language.utils.tool_factory.kbqa.query_rewrite
+test_kgrag:
+	@echo "Starting test_kgrag..."
+	python -m prompt_language.utils.tool_factory.kbqa.kgrag

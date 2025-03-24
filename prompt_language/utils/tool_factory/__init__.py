@@ -26,6 +26,11 @@ from .auto_promptor.prompt_optimizer import prompt_optimizer
 from .auto_promptor.log2excelpic import log2excelpic
 from .auto_promptor.meta_prompt import meta_prompt
 
+from .kbqa.kgrag import kgrag
+from .kbqa.ngql import ngql
+from .kbqa.query_rewrite import query_rewrite
+
+
 __all__ = [
     'get_weather',
     'send_email',
@@ -53,4 +58,9 @@ __all__ = [
     'prompt_optimizer',
     'log2excelpic',
     'meta_prompt',
+
+    # kbqa
+    'kgrag',
+    'ngql',
+    'query_rewrite'
 ]

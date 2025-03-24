@@ -14,6 +14,304 @@ class ExploreAgent():
         self.role = None
         self.add_solution=False
         self.query = ""
+        self.kg_schema = {
+    "entity": [
+        {
+            "name": "business",
+            "alias": "专业领域",
+            "props": [
+                {
+                    "name": "name",
+                    "alias": "name",
+                    "data_type": "string",
+                    "partial_values": [
+                        "产品介绍",
+                        "数据资产",
+                        "知识网络",
+                        "制度规范",
+                        "AnyDATA"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "district",
+            "alias": "地区",
+            "props": [
+                {
+                    "name": "parent",
+                    "alias": "隶属于",
+                    "data_type": "string",
+                    "partial_values": [
+                        "重庆市",
+                        "河北省保定市",
+                        "新疆维吾尔自治区",
+                        "河北省石家庄市"
+                    ]
+                },
+                {
+                    "name": "level",
+                    "alias": "层级",
+                    "data_type": "integer",
+                    "partial_values": [
+                        "3",
+                        "2",
+                        "1"
+                    ]
+                },
+                {
+                    "name": "code",
+                    "alias": "区划代码",
+                    "data_type": "string",
+                    "partial_values": [
+                        "610925000000",
+                        "610600000000",
+                        "640200000000",
+                        "652826000000",
+                        "620524000000"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": [
+                        "市辖区",
+                        "鼓楼区",
+                        "市中区",
+                        "新华区",
+                        "省直辖县级行政区划"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "person",
+            "alias": "人员",
+            "props": [
+                {
+                    "name": "english_name",
+                    "alias": "英文名",
+                    "data_type": "string",
+                    "partial_values": [
+                        "Jason",
+                        "Leo",
+                        "Kevin",
+                        "Jack"
+                    ]
+                },
+                {
+                    "name": "status",
+                    "alias": "用户状态",
+                    "data_type": "string",
+                    "partial_values": [
+                        "enabled",
+                        "disabled"
+                    ]
+                },
+                {
+                    "name": "is_expert",
+                    "alias": "专家角色",
+                    "data_type": "boolean",
+                    "partial_values": [
+                        "false",
+                        "true"
+                    ]
+                },
+                {
+                    "name": "university",
+                    "alias": "毕业院校",
+                    "data_type": "string",
+                    "partial_values": [
+                        "[]"
+                    ]
+                },
+                {
+                    "name": "email",
+                    "alias": "邮箱",
+                    "data_type": "string",
+                    "partial_values": [
+                        "Meya.pan@aishu.cn",
+                        "Arnold.hua@aishu.cn",
+                        "jin.huihui@aishu.cn",
+                        "Chao.Li@aishu.cn"
+                    ]
+                },
+                {
+                    "name": "contact",
+                    "alias": "联系方式",
+                    "data_type": "string",
+                    "partial_values": [
+                        "13601996899"
+                    ]
+                },
+                {
+                    "name": "user_securtiy_level",
+                    "alias": "用户密级",
+                    "data_type": "integer",
+                    "partial_values": [
+                        "5"
+                    ]
+                },
+                {
+                    "name": "user_role",
+                    "alias": "用户角色",
+                    "data_type": "string",
+                    "partial_values": []
+                },
+                {
+                    "name": "position",
+                    "alias": "职位",
+                    "data_type": "string",
+                    "partial_values": [
+                        "技术工程师",
+                        "高级技术工程师",
+                        "高级后端开发工程师",
+                        "高级解决方案顾问"
+                    ]
+                },
+                {
+                    "name": "id",
+                    "alias": "id",
+                    "data_type": "string",
+                    "partial_values": [
+                        "b7a8903e-d786-11ee-8d78-42a9aad9dca0",
+                        "b6b791e6-d535-11ee-a2b0-42a9aad9dca0",
+                        "c22ec652-d535-11ee-a2b0-42a9aad9dca0",
+                        "dbf4b862-d12a-11ee-9ee9-42a9aad9dca0",
+                        "ba0a7018-d786-11ee-8d78-42a9aad9dca0"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "姓名",
+                    "data_type": "string",
+                    "partial_values": [
+                        "王磊",
+                        "李蓉",
+                        "龙文",
+                        "余双军",
+                        "李超-01"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "orgnization",
+            "alias": "部门",
+            "props": [
+                {
+                    "name": "desc",
+                    "alias": "部门职责描述",
+                    "data_type": "string",
+                    "partial_values": [
+                        "负责南区 AnyDATA、AnyFabric 产品的数据治理、知识图谱构建及认知应用开发，持续提升技术能力和服务水平，达成业务目标，实现客户成功和合作伙伴成功。",
+                        "负责围绕大数据基础设施战略，基于产品定位开展灾难恢复管理子系统和灾备运营管理子系统规划、研发交付、质量管理、技术赋能，以高价值、高竞争力的产品实现客户成功",
+                        "负责华东地区（上海市、江苏省、浙江省、安徽省、福建省）的公共事业行业市场拓展及大客户销售工作，围绕公司发展战略及行业市场发展目标，通过客户经营、销售过程管理落地销售策略，达成销售目标，实现客户成功"
+                    ]
+                },
+                {
+                    "name": "parent",
+                    "alias": "隶属于",
+                    "data_type": "string",
+                    "partial_values": [
+                        "aishu.cn",
+                        "aishu.cn/aishu",
+                        "aishu.cn/aishu/外部用户",
+                        "aishu.cn/aishu/大客户销售体系",
+                        "aishu.cn/aishu/大客户销售体系/系统行业大客户销售线"
+                    ]
+                },
+                {
+                    "name": "email",
+                    "alias": "邮箱",
+                    "data_type": "string",
+                    "partial_values": []
+                },
+                {
+                    "name": "id",
+                    "alias": "id",
+                    "data_type": "string",
+                    "partial_values": [
+                        "2e7ee324-d535-11ee-a2b0-42a9aad9dca0",
+                        "2b16eff6-d535-11ee-a2b0-42a9aad9dca0",
+                        "2ee1cc50-d535-11ee-a2b0-42a9aad9dca0",
+                        "735389be-2463-11ef-a0ef-fe611520b6e4",
+                        "2eafd0ce-d535-11ee-a2b0-42a9aad9dca0"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": [
+                        "存储测试组",
+                        "系统测试部",
+                        "引擎研发部",
+                        "北区企业数据智能方案部",
+                        "引擎测试组"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "project",
+            "alias": "项目",
+            "props": [
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": []
+                }
+            ]
+        }
+    ],
+    "edge": [
+        {
+            "name": "person_2_business_belong_to",
+            "alias": "擅长领域",
+            "subject": "person",
+            "object": "business",
+            "description": "人员-擅长领域->专业领域"
+        },
+        {
+            "name": "district_2_district_child",
+            "alias": "下级地区",
+            "subject": "district",
+            "object": "district",
+            "description": "地区-下级地区->地区"
+        },
+        {
+            "name": "person_2_district_work_at",
+            "alias": "工作地点",
+            "subject": "person",
+            "object": "district",
+            "description": "人员-工作地点->地区"
+        },
+        {
+            "name": "person_2_project_join",
+            "alias": "负责项目",
+            "subject": "person",
+            "object": "project",
+            "description": "人员-负责项目->项目"
+        },
+        {
+            "name": "person_2_orgnization_belong_to",
+            "alias": "所在部门",
+            "subject": "person",
+            "object": "orgnization",
+            "description": "人员-所在部门->部门"
+        },
+        {
+            "name": "orgnization_2_orgnization_child",
+            "alias": "子部门",
+            "subject": "orgnization",
+            "object": "orgnization",
+            "description": "部门-子部门->部门"
+        }
+    ]
+}
     
     async def init(self):
         """异步初始化方法"""
@@ -44,7 +342,9 @@ class ExploreAgent():
 
     async def get_r1_plan_prompt(self):
         return """
-你是一个任务规划师，你会根据用户的问题和当前拥有的工具，将用户的复杂问题拆分为尽可能简单的子问题。通过逐步解决子问题，最终综合得出原始问题的答案。请给出关键步骤。最终结果仅仅输出解决问题的步骤即可，按条罗列。
+你是一个任务规划师，你会根据用户的问题和当前拥有的工具，将用户的复杂问题拆分为尽可能简单的子问题。
+你拆分子问题是有依据的，你会根据图谱的schema来对原问题进行拆分，尽可能一个子问题对应一个三元组，通过逐步解决子问题，最终综合得出原始问题的答案。请给出关键步骤。最终结果仅仅输出解决问题的步骤即可，按条罗列。
+你解决问题的过程中尽可能使用工具。
 
 用户的问题为：
 当前问题为：{origin_query}\n\n
@@ -52,9 +352,20 @@ class ExploreAgent():
 你拥有的工具信息为:
 {tools}
 
+图谱的schema为：
+{kg_schema}
+
 注意：
 (1)工具名称一定要和工具信息中的名称一致。
-(2)当前世界时间2025年2月
+(2)当前世界时间2025年2月。
+
+Examples:
+示例1: xxx所在的组还有谁
+分析: 要想知道xxx所在的组还有谁，我们必须先知道xxx在哪个组，然后再查询该组有哪些人。所以应该分为两个查询子问题。先查询xxx在哪个组，再查询该组有哪些人（查询之前需要调用重写工具重写query）
+
+示例2: AnyDATA模型工厂研发部开发、测试和算法分别有多少人
+分析：AnyDATA模型工厂研发部有可能是个大部门，所以我们要先知道AnyDATA模型工厂研发部包含了哪些子部门，再知道这些子部门都有谁，最后根据找到的信息回答问题。(回答下一个子问题之前需要根据上下文决定是否调用重写工具）
+ 
 """
 
     async def get_role(self):
@@ -114,7 +425,6 @@ class ExploreAgent():
     
     async def tool_run(self, tool_message):
         function_name, function_params = tool_message.split(":", 1)
-        
         # code_tool需要特殊处理以保持历史上下文
         if "code_" in function_name.strip():
             try:
@@ -133,7 +443,10 @@ class ExploreAgent():
         # 其他工具的常规处理
         function_params = await self.params_extract(function_params)
         param_values = list(function_params.values())
-        result = await self.tools[function_name](*param_values)
+        if "query_rewrite" in function_name.strip():
+            result = await self.tools[function_name](*param_values, history_message=self.query)
+        else:
+            result = await self.tools[function_name](*param_values)
         return str(result)
 
     
@@ -141,6 +454,7 @@ class ExploreAgent():
         self.query = query
         if not self.add_solution:
             planner_prompt = await self.get_r1_plan_prompt()
+            planner_prompt = planner_prompt.replace(r"{kg_schema}", str(self.kg_schema))
             planner_prompt = planner_prompt.replace(r"{tools}", "".join(self.tool_describe))
             planner_prompt = planner_prompt.replace(r"{origin_query}", query).strip()
             messages = [
@@ -164,7 +478,7 @@ class ExploreAgent():
         all_answer = ""
         query_params = ""
         tool_Flag = False
-        breakpoint()
+        # breakpoint()
         async for chunk in get_model_response_v3(messages=messages):
             all_answer += chunk.choices[0].delta.content
             if tool_Flag:

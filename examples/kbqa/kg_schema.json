@@ -1,0 +1,356 @@
+{
+    "entity": [
+        {
+            "name": "business",
+            "alias": "专业领域",
+            "props": [
+                {
+                    "name": "name",
+                    "alias": "name",
+                    "data_type": "string",
+                    "partial_values": [
+                        "产品介绍",
+                        "数据资产",
+                        "知识网络",
+                        "制度规范",
+                        "AnyDATA"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "district",
+            "alias": "地区",
+            "props": [
+                {
+                    "name": "parent",
+                    "alias": "隶属于",
+                    "data_type": "string",
+                    "partial_values": [
+                        "重庆市",
+                        "河北省保定市",
+                        "新疆维吾尔自治区",
+                        "河北省石家庄市"
+                    ]
+                },
+                {
+                    "name": "level",
+                    "alias": "层级",
+                    "data_type": "integer",
+                    "partial_values": [
+                        "3",
+                        "2",
+                        "1"
+                    ]
+                },
+                {
+                    "name": "code",
+                    "alias": "区划代码",
+                    "data_type": "string",
+                    "partial_values": [
+                        "610925000000",
+                        "610600000000",
+                        "640200000000",
+                        "652826000000",
+                        "620524000000"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": [
+                        "市辖区",
+                        "鼓楼区",
+                        "市中区",
+                        "新华区",
+                        "省直辖县级行政区划"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "industry",
+            "alias": "行业",
+            "props": [
+                {
+                    "name": "parent",
+                    "alias": "父级路径",
+                    "data_type": "string",
+                    "partial_values": [
+                        "制造业",
+                        "批发和零售业/零售业",
+                        "租赁和商务服务业/商务服务业",
+                        "制造业/铁路运输设备制造"
+                    ]
+                },
+                {
+                    "name": "level",
+                    "alias": "level",
+                    "data_type": "integer",
+                    "partial_values": [
+                        "4",
+                        "3",
+                        "2",
+                        "1"
+                    ]
+                },
+                {
+                    "name": "description",
+                    "alias": "描述",
+                    "data_type": "string",
+                    "partial_values": [
+                        "指人造卫星的电信传输和广播电视传输服务",
+                        "指用于动物疾病防治医药的制造",
+                        "指利用电网出售给用户电能的输送与分配活动，以及供电局的供电活动",
+                        "指以有色金属为基体，加入一种或几种其他元素所构成的合金生产活动"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": [
+                        "其他采矿业",
+                        "中国共产党机关",
+                        "国际组织",
+                        "管道和设备安装",
+                        "邮政基本服务"
+                    ]
+                },
+                {
+                    "name": "id",
+                    "alias": "ID",
+                    "data_type": "string",
+                    "partial_values": [
+                        "8332",
+                        "832",
+                        "893",
+                        "962",
+                        "8424"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "person",
+            "alias": "人员",
+            "props": [
+                {
+                    "name": "english_name",
+                    "alias": "英文名",
+                    "data_type": "string",
+                    "partial_values": [
+                        "Jason",
+                        "Leo",
+                        "Kevin",
+                        "Jack"
+                    ]
+                },
+                {
+                    "name": "status",
+                    "alias": "用户状态",
+                    "data_type": "string",
+                    "partial_values": [
+                        "enabled",
+                        "disabled"
+                    ]
+                },
+                {
+                    "name": "is_expert",
+                    "alias": "专家角色",
+                    "data_type": "boolean",
+                    "partial_values": [
+                        "false",
+                        "true"
+                    ]
+                },
+                {
+                    "name": "university",
+                    "alias": "毕业院校",
+                    "data_type": "string",
+                    "partial_values": [
+                        "[]"
+                    ]
+                },
+                {
+                    "name": "email",
+                    "alias": "邮箱",
+                    "data_type": "string",
+                    "partial_values": [
+                        "Meya.pan@aishu.cn",
+                        "Arnold.hua@aishu.cn",
+                        "jin.huihui@aishu.cn",
+                        "Chao.Li@aishu.cn"
+                    ]
+                },
+                {
+                    "name": "contact",
+                    "alias": "联系方式",
+                    "data_type": "string",
+                    "partial_values": [
+                        "13601996899"
+                    ]
+                },
+                {
+                    "name": "user_securtiy_level",
+                    "alias": "用户密级",
+                    "data_type": "integer",
+                    "partial_values": [
+                        "5"
+                    ]
+                },
+                {
+                    "name": "user_role",
+                    "alias": "用户角色",
+                    "data_type": "string",
+                    "partial_values": []
+                },
+                {
+                    "name": "position",
+                    "alias": "职位",
+                    "data_type": "string",
+                    "partial_values": [
+                        "技术工程师",
+                        "高级技术工程师",
+                        "高级后端开发工程师",
+                        "高级解决方案顾问"
+                    ]
+                },
+                {
+                    "name": "id",
+                    "alias": "id",
+                    "data_type": "string",
+                    "partial_values": [
+                        "b7a8903e-d786-11ee-8d78-42a9aad9dca0",
+                        "b6b791e6-d535-11ee-a2b0-42a9aad9dca0",
+                        "c22ec652-d535-11ee-a2b0-42a9aad9dca0",
+                        "dbf4b862-d12a-11ee-9ee9-42a9aad9dca0",
+                        "ba0a7018-d786-11ee-8d78-42a9aad9dca0"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "姓名",
+                    "data_type": "string",
+                    "partial_values": [
+                        "王磊",
+                        "李蓉",
+                        "龙文",
+                        "余双军",
+                        "李超-01"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "orgnization",
+            "alias": "部门",
+            "props": [
+                {
+                    "name": "desc",
+                    "alias": "部门职责描述",
+                    "data_type": "string",
+                    "partial_values": [
+                        "负责南区 AnyDATA、AnyFabric 产品的数据治理、知识图谱构建及认知应用开发，持续提升技术能力和服务水平，达成业务目标，实现客户成功和合作伙伴成功。",
+                        "负责围绕大数据基础设施战略，基于产品定位开展灾难恢复管理子系统和灾备运营管理子系统规划、研发交付、质量管理、技术赋能，以高价值、高竞争力的产品实现客户成功",
+                        "负责华东地区（上海市、江苏省、浙江省、安徽省、福建省）的公共事业行业市场拓展及大客户销售工作，围绕公司发展战略及行业市场发展目标，通过客户经营、销售过程管理落地销售策略，达成销售目标，实现客户成功"
+                    ]
+                },
+                {
+                    "name": "parent",
+                    "alias": "隶属于",
+                    "data_type": "string",
+                    "partial_values": [
+                        "aishu.cn",
+                        "aishu.cn/aishu",
+                        "aishu.cn/aishu/外部用户",
+                        "aishu.cn/aishu/大客户销售体系",
+                        "aishu.cn/aishu/大客户销售体系/系统行业大客户销售线"
+                    ]
+                },
+                {
+                    "name": "email",
+                    "alias": "邮箱",
+                    "data_type": "string",
+                    "partial_values": []
+                },
+                {
+                    "name": "id",
+                    "alias": "id",
+                    "data_type": "string",
+                    "partial_values": [
+                        "2e7ee324-d535-11ee-a2b0-42a9aad9dca0",
+                        "2b16eff6-d535-11ee-a2b0-42a9aad9dca0",
+                        "2ee1cc50-d535-11ee-a2b0-42a9aad9dca0",
+                        "735389be-2463-11ef-a0ef-fe611520b6e4",
+                        "2eafd0ce-d535-11ee-a2b0-42a9aad9dca0"
+                    ]
+                },
+                {
+                    "name": "name",
+                    "alias": "名称",
+                    "data_type": "string",
+                    "partial_values": [
+                        "存储测试组",
+                        "系统测试部",
+                        "引擎研发部",
+                        "北区企业数据智能方案部",
+                        "引擎测试组"
+                    ]
+                }
+            ]
+        }
+    ],
+    "edge": [
+        {
+            "name": "person_2_business_belong_to",
+            "alias": "擅长领域",
+            "subject": "person",
+            "object": "business",
+            "description": "人员-擅长领域->专业领域"
+        },
+        {
+            "name": "industry_2_industry",
+            "alias": "子行业",
+            "subject": "industry",
+            "object": "industry",
+            "description": "行业-子行业->行业"
+        },
+        {
+            "name": "district_2_district_child",
+            "alias": "下级地区",
+            "subject": "district",
+            "object": "district",
+            "description": "地区-下级地区->地区"
+        },
+        {
+            "name": "person_2_district_work_at",
+            "alias": "工作地点",
+            "subject": "person",
+            "object": "district",
+            "description": "人员-工作地点->地区"
+        },
+        {
+            "name": "person_2_industry_service",
+            "alias": "专注行业",
+            "subject": "person",
+            "object": "industry",
+            "description": "人员-专注行业->行业"
+        },
+        {
+            "name": "person_2_orgnization_belong_to",
+            "alias": "所在部门",
+            "subject": "person",
+            "object": "orgnization",
+            "description": "人员-所在部门->部门"
+        },
+        {
+            "name": "orgnization_2_orgnization_child",
+            "alias": "子部门",
+            "subject": "orgnization",
+            "object": "orgnization",
+            "description": "部门-子部门->部门"
+        }
+    ]
+}
